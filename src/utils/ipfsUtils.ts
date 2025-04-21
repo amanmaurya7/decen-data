@@ -1,47 +1,68 @@
 
-// This is a placeholder for actual IPFS integration
-// In a real application, this would connect to Pinata or other IPFS providers
+// IPFS utils using Pinata API for uploads
+// ---------------------------------------------------------------------------
+// IMPORTANT: Add your Pinata credentials to a .env file at the root of your project:
+// VITE_PINATA_API_KEY=your_key_here
+// VITE_PINATA_API_SECRET=your_secret_here
+//
+// Pinata Docs: https://docs.pinata.cloud/api-pinning/pin-file
+//
+// These VITE_ prefixed variables are automatically available to your Vite project via import.meta.env
+// ---------------------------------------------------------------------------
 
-// Simulated IPFS upload - in a real application, this would use Pinata SDK
+const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY as string;
+const PINATA_API_SECRET = import.meta.env.VITE_PINATA_API_SECRET as string;
+
+if (!PINATA_API_KEY || !PINATA_API_SECRET) {
+  console.warn(
+    "Pinata API key/secret missing. Please add VITE_PINATA_API_KEY and VITE_PINATA_API_SECRET in your .env file."
+  );
+}
+
+// Upload a file to Pinata
 export const uploadToIPFS = async (file: File): Promise<string> => {
   try {
-    // Simulate upload delay
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    // Generate a random IPFS hash for simulation
-    const randomHash = "Qm" + Math.random().toString(36).substring(2, 15) + 
-                      Math.random().toString(36).substring(2, 15) +
-                      Math.random().toString(36).substring(2, 15);
-    
-    console.log("Uploaded file to IPFS:", file.name, "Hash:", randomHash);
-    
-    return randomHash;
+    const endpoint = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization:
+          "Basic " +
+          btoa(`${PINATA_API_KEY}:${PINATA_API_SECRET}`),
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error("Pinata upload failed: " + errorText);
+    }
+    const result = await response.json();
+    // Pinata returns IPFS hash under IpfsHash
+    return result.IpfsHash;
   } catch (error) {
-    console.error("Error uploading to IPFS:", error);
+    console.error("Error uploading to Pinata:", error);
     throw error;
   }
 };
 
-// Simulated IPFS download - in a real application, this would use IPFS HTTP gateway
+// Download blob from Pinata gateway
 export const downloadFromIPFS = async (ipfsHash: string): Promise<Blob> => {
   try {
-    // Simulate download delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Create a dummy file for simulation
-    const dummyContent = "This is a simulated file downloaded from IPFS with hash: " + ipfsHash;
-    const blob = new Blob([dummyContent], { type: "text/plain" });
-    
-    console.log("Downloaded file from IPFS. Hash:", ipfsHash);
-    
-    return blob;
+    const url = getIPFSGatewayURL(ipfsHash);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Error downloading IPFS file");
+    return await response.blob();
   } catch (error) {
-    console.error("Error downloading from IPFS:", error);
+    console.error("Error downloading file from IPFS:", error);
     throw error;
   }
 };
 
-// Get IPFS gateway URL
+// Returns a Pinata public gateway URL for the given IPFS hash
 export const getIPFSGatewayURL = (ipfsHash: string): string => {
   return `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
 };
