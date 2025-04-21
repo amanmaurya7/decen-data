@@ -102,29 +102,7 @@ const Index = () => {
     
     // Mock data for demonstration
     const mockFiles: FileInterface[] = [
-      {
-        id: "file-1",
-        name: "important-document.pdf",
-        size: 2.5 * 1024 * 1024, // 2.5 MB
-        type: "application/pdf",
-        owner: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-        ipfsHash: "QmX7gXYuT9XmZ9Td8eeifkLwMwJyc6pAGMmgMvYmLFo4v6",
-        uploadDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-        viewers: ["0x71C7656EC7ab88b098defB751B7401B5f6d8976F"]
-      },
-      {
-        id: "file-2",
-        name: "confidential-report.docx",
-        size: 1.8 * 1024 * 1024, // 1.8 MB
-        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        owner: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-        ipfsHash: "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
-        uploadDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-        viewers: [
-          "0x71C7656EC7ab88b098defB751B7401B5f6d8976F", 
-          "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2"
-        ]
-      }
+      
     ];
     
     setFiles(mockFiles);
