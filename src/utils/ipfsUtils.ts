@@ -1,4 +1,3 @@
-
 // IPFS utils using Pinata API for uploads
 // ---------------------------------------------------------------------------
 // IMPORTANT: Add your Pinata credentials to a .env file at the root of your project:
@@ -29,9 +28,9 @@ export const uploadToIPFS = async (file: File): Promise<string> => {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
-        Authorization:
-          "Basic " +
-          btoa(`${PINATA_API_KEY}:${PINATA_API_SECRET}`),
+        // Corrected headers according to Pinata documentation
+        pinata_api_key: PINATA_API_KEY,
+        pinata_secret_api_key: PINATA_API_SECRET,
       },
       body: formData,
     });

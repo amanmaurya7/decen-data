@@ -60,6 +60,15 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Environment Variables
+
+Ensure the following environment variables are set in your `.env` file:
+
+- `PINATA_API_KEY`: Your Pinata API key.
+- `PINATA_SECRET_API_KEY`: Your Pinata secret API key.
+
+You can obtain these keys by creating an account on [Pinata](https://www.pinata.cloud/) and generating API keys in the dashboard.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/a09c61c1-d9f9-4aab-af91-7bde3c953c81) and click on Share -> Publish.
