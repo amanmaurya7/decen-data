@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Download, Eye, EyeOff, Loader, Trash, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface FileInterface {
   id: string;
@@ -106,34 +106,30 @@ const FileList = ({
                     
                     <div className="flex items-center text-xs">
                       <span className="text-gray-500">Owner: </span>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="ml-1 text-blockchain-purple">
-                              {truncateAddress(file.owner)}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{file.owner}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="ml-1 text-blockchain-purple">
+                            {truncateAddress(file.owner)}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{file.owner}</p>
+                        </TooltipContent>
+                      </Tooltip>
                       
                       <span className="mx-2 text-gray-600">|</span>
                       
                       <span className="text-gray-500">IPFS: </span>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="ml-1 text-blockchain-teal">
-                              {file.ipfsHash.substring(0, 10)}...
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{file.ipfsHash}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="ml-1 text-blockchain-teal">
+                            {file.ipfsHash.substring(0, 10)}...
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{file.ipfsHash}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                   
