@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
@@ -54,7 +55,10 @@ const Index = () => {
     const checkConnection = async () => {
       if (window.ethereum) {
         try {
-          if (accounts.length > 0) {
+          // Request accounts from MetaMask
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          
+          if (accounts && accounts.length > 0) {
             setAccountAddress(accounts[0]);
             setIsConnected(true);
             
@@ -493,3 +497,4 @@ const Index = () => {
 };
 
 export default Index;
+
