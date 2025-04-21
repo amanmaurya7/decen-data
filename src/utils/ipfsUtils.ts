@@ -65,3 +65,27 @@ export const downloadFromIPFS = async (ipfsHash: string): Promise<Blob> => {
 export const getIPFSGatewayURL = (ipfsHash: string): string => {
   return `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
 };
+
+// Unpin (delete) a file from Pinata by IPFS hash
+export const unpinFromIPFS = async (ipfsHash: string): Promise<void> => {
+  try {
+    const endpoint = `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`;
+    const response = await fetch(endpoint, {
+      method: "DELETE",
+      headers: {
+        pinata_api_key: PINATA_API_KEY,
+        pinata_secret_api_key: PINATA_API_SECRET,
+      },
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error("Failed to unpin from Pinata: " + errText);
+    }
+    // Optionally: return something if you want
+    return;
+  } catch (error) {
+    console.error("Error unpinning from Pinata:", error);
+    throw error;
+  }
+};

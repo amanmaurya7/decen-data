@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
@@ -14,7 +13,7 @@ import {
   isTestNetwork, 
   switchToLocalNetwork 
 } from '@/utils/blockchainUtils';
-import { uploadToIPFS, downloadFromIPFS } from '@/utils/ipfsUtils';
+import { uploadToIPFS, downloadFromIPFS, unpinFromIPFS } from '@/utils/ipfsUtils';
 import { encryptFile, decryptFile } from '@/utils/encryptionUtils';
 import { 
   uploadFileToBlockchain, 
@@ -51,18 +50,14 @@ const Index = () => {
   
   const toast = useToast();
 
-  // Initialize blockchain connection
   useEffect(() => {
     const checkConnection = async () => {
       if (window.ethereum) {
         try {
-          // Check if already connected
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts.length > 0) {
             setAccountAddress(accounts[0]);
             setIsConnected(true);
             
-            // Get network information
             const network = await getNetworkName();
             setNetworkName(network);
             
@@ -70,7 +65,6 @@ const Index = () => {
             setIsCorrectNetwork(onTestNetwork);
           }
           
-          // Listen for account changes
           window.ethereum.on('accountsChanged', (newAccounts: string[]) => {
             if (newAccounts.length === 0) {
               setIsConnected(false);
@@ -81,7 +75,6 @@ const Index = () => {
             }
           });
           
-          // Listen for network changes
           window.ethereum.on('chainChanged', async () => {
             const network = await getNetworkName();
             setNetworkName(network);
@@ -89,7 +82,6 @@ const Index = () => {
             const onTestNetwork = await isTestNetwork();
             setIsCorrectNetwork(onTestNetwork);
             
-            // Reload the page on network change as recommended by MetaMask
             window.location.reload();
           });
         } catch (error) {
@@ -100,19 +92,14 @@ const Index = () => {
     
     checkConnection();
     
-    // Mock data for demonstration
-    const mockFiles: FileInterface[] = [
-      
-    ];
+    const mockFiles: FileInterface[] = [];
     
     setFiles(mockFiles);
     
-    // Calculate total storage
     const total = mockFiles.reduce((acc, file) => acc + file.size, 0);
     setTotalStorage(total);
     
     return () => {
-      // Clean up event listeners
       if (window.ethereum) {
         window.ethereum.removeAllListeners('accountsChanged');
         window.ethereum.removeAllListeners('chainChanged');
@@ -120,7 +107,6 @@ const Index = () => {
     };
   }, []);
   
-  // Handle wallet connection
   const handleConnectWallet = async () => {
     try {
       const address = await connectWallet();
@@ -146,12 +132,10 @@ const Index = () => {
     }
   };
   
-  // Handle network switching
   const handleSwitchNetwork = async () => {
     try {
       await switchToLocalNetwork();
       
-      // Update network status
       const network = await getNetworkName();
       setNetworkName(network);
       
@@ -171,7 +155,6 @@ const Index = () => {
     }
   };
   
-  // Handle file upload
   const handleFileUpload = async (file: File) => {
     if (!isConnected) {
       toast.toast({
@@ -194,23 +177,18 @@ const Index = () => {
     setIsLoading(true);
     
     try {
-      // Step 1: Generate a unique ID for the file
       const fileId = uuidv4();
       
-      // Step 2: Encrypt the file (simulated)
       toast.toast({ title: "Encrypting file..." });
       const encryptedData = await encryptFile(file);
       
-      // Step 3: Upload to IPFS (simulated)
       toast.toast({ title: "Uploading to decentralized storage..." });
       const ipfsHash = await uploadToIPFS(file);
       
-      // Step 4: Store metadata on blockchain (simulated)
       toast.toast({ title: "Recording on blockchain..." });
       const success = await uploadFileToBlockchain(fileId, file.name, ipfsHash, file.size);
       
       if (success) {
-        // Add file to the list
         const newFile: FileInterface = {
           id: fileId,
           name: file.name,
@@ -244,7 +222,6 @@ const Index = () => {
     }
   };
   
-  // Handle file download
   const handleFileDownload = async (fileId: string) => {
     if (!isConnected || !isCorrectNetwork) {
       toast.toast({
@@ -259,13 +236,11 @@ const Index = () => {
     setLoadingFileId(fileId);
     
     try {
-      // Find the file in our list
       const file = files.find(f => f.id === fileId);
       if (!file) {
         throw new Error("File not found");
       }
       
-      // Step 1: Get file metadata from blockchain (simulated)
       toast.toast({ title: "Retrieving file metadata from blockchain..." });
       const metadata = await downloadFileFromBlockchain(fileId);
       
@@ -273,15 +248,12 @@ const Index = () => {
         throw new Error("Failed to retrieve file metadata");
       }
       
-      // Step 2: Download from IPFS (simulated)
       toast.toast({ title: "Downloading from decentralized storage..." });
       const encryptedData = await downloadFromIPFS(file.ipfsHash);
       
-      // Step 3: Decrypt the file (simulated)
       toast.toast({ title: "Decrypting file..." });
       const decryptedData = await decryptFile(await encryptedData.arrayBuffer(), file.name);
       
-      // Step 4: Create download link
       const url = URL.createObjectURL(decryptedData);
       const a = document.createElement('a');
       a.href = url;
@@ -307,7 +279,6 @@ const Index = () => {
     }
   };
   
-  // Handle file deletion
   const handleFileDelete = async (fileId: string) => {
     if (!isConnected || !isCorrectNetwork) {
       toast.toast({
@@ -322,18 +293,26 @@ const Index = () => {
     setLoadingFileId(fileId);
     
     try {
-      // Find the file in our list
       const file = files.find(f => f.id === fileId);
       if (!file) {
         throw new Error("File not found");
       }
       
-      // Delete from blockchain (simulated)
       toast.toast({ title: "Removing file reference from blockchain..." });
       const success = await deleteFile(fileId);
       
       if (success) {
-        // Remove file from the list
+        toast.toast({ title: "Deleting from decentralized storage..." });
+        try {
+          await unpinFromIPFS(file.ipfsHash);
+        } catch (error: any) {
+          toast.toast({
+            title: "Pinata Deletion Failed",
+            description: error?.message || "File deleted from blockchain but failed to unpin from storage",
+            variant: "destructive",
+          });
+        }
+        
         setFiles(prev => prev.filter(f => f.id !== fileId));
         setTotalStorage(prev => prev - file.size);
         
@@ -356,13 +335,11 @@ const Index = () => {
     }
   };
   
-  // Handle opening share modal
   const handleOpenShareModal = (fileId: string) => {
     setCurrentlySharedFile(fileId);
     setShareModalOpen(true);
   };
   
-  // Handle sharing file access
   const handleShareAccess = async (address: string) => {
     if (!currentlySharedFile || !isConnected || !isCorrectNetwork) {
       return;
@@ -371,11 +348,9 @@ const Index = () => {
     setIsShareProcessing(true);
     
     try {
-      // Share access on blockchain (simulated)
       const success = await shareFileAccess(currentlySharedFile, address);
       
       if (success) {
-        // Update the file's viewers list
         setFiles(prev => 
           prev.map(file => 
             file.id === currentlySharedFile 
@@ -402,7 +377,6 @@ const Index = () => {
     }
   };
   
-  // Handle revoking file access
   const handleRevokeAccess = async (address: string) => {
     if (!currentlySharedFile || !isConnected || !isCorrectNetwork) {
       return;
@@ -411,11 +385,9 @@ const Index = () => {
     setIsShareProcessing(true);
     
     try {
-      // Revoke access on blockchain (simulated)
       const success = await revokeFileAccess(currentlySharedFile, address);
       
       if (success) {
-        // Update the file's viewers list
         setFiles(prev => 
           prev.map(file => 
             file.id === currentlySharedFile 
@@ -442,7 +414,6 @@ const Index = () => {
     }
   };
   
-  // Calculate metrics
   const totalFiles = files.length;
   const formattedStorage = (totalStorage / (1024 * 1024)).toFixed(2);
   const currentFileViewers = files.find(f => f.id === currentlySharedFile)?.viewers.filter(
