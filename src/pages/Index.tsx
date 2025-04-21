@@ -450,15 +450,16 @@ const Index = () => {
   ) || [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blockchain-darkBlue via-blockchain-purple to-blockchain-teal/50 transition-all duration-500">
+    <div className="min-h-screen bg-blockchain-darkBlue">
       <Header 
         onConnect={handleConnectWallet} 
         isConnected={isConnected}
         accountAddress={accountAddress}
         networkName={networkName}
       />
-      <main className="container mx-auto px-4 py-10 flex-1 md:px-10 flex flex-col gap-12">
-        <div className="mb-4">
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
           <NetworkStatus 
             isConnected={isConnected}
             connectedNetwork={networkName}
@@ -466,45 +467,44 @@ const Index = () => {
             onSwitchNetwork={handleSwitchNetwork}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <MetricsCard 
             title="Total Files" 
             value={totalFiles} 
             description="Securely stored files"
             icon={<File className="h-4 w-4" />} 
-            className="animate-fade-in"
           />
           <MetricsCard 
             title="Storage Used" 
             value={`${formattedStorage} MB`} 
             description="Encrypted storage space"
             icon={<Folder className="h-4 w-4" />} 
-            className="animate-fade-in"
           />
           <MetricsCard 
             title="Security Status" 
             value="Encrypted" 
             description="End-to-end encryption"
             icon={<Lock className="h-4 w-4" />} 
-            className="bg-gradient-to-br from-blockchain-darkBlue to-blockchain-purple/30 shadow-lg animate-fade-in"
+            className="bg-gradient-to-br from-blockchain-darkBlue to-blockchain-purple/30"
           />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="lg:col-span-1 mb-8 lg:mb-0">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
             <FileUpload onUpload={handleFileUpload} isUploading={isLoading} />
           </div>
+          
           <div className="lg:col-span-2">
-            <div className="w-full rounded-2xl shadow-xl bg-card-gradient p-2 md:p-4 glass">
-              <FileList 
-                files={files}
-                connectedAccount={accountAddress}
-                onDownload={handleFileDownload}
-                onDelete={handleFileDelete}
-                onShareAccess={handleOpenShareModal}
-                isLoading={isLoading}
-                loadingFileId={loadingFileId}
-              />
-            </div>
+            <FileList 
+              files={files}
+              connectedAccount={accountAddress}
+              onDownload={handleFileDownload}
+              onDelete={handleFileDelete}
+              onShareAccess={handleOpenShareModal}
+              isLoading={isLoading}
+              loadingFileId={loadingFileId}
+            />
           </div>
         </div>
       </main>
@@ -522,4 +522,3 @@ const Index = () => {
 };
 
 export default Index;
-
