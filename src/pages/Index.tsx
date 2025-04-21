@@ -450,7 +450,7 @@ const Index = () => {
   ) || [];
 
   return (
-    <div className="min-h-screen bg-blockchain-darkBlue">
+    <div className="min-h-screen bg-blockchain-darkBlue flex flex-col">
       <Header 
         onConnect={handleConnectWallet} 
         isConnected={isConnected}
@@ -458,8 +458,8 @@ const Index = () => {
         networkName={networkName}
       />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-8 flex flex-col gap-8">
+        <div className="mb-4 sm:mb-6">
           <NetworkStatus 
             isConnected={isConnected}
             connectedNetwork={networkName}
@@ -468,7 +468,7 @@ const Index = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
           <MetricsCard 
             title="Total Files" 
             value={totalFiles} 
@@ -490,12 +490,12 @@ const Index = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="w-full lg:w-1/3">
             <FileUpload onUpload={handleFileUpload} isUploading={isLoading} />
           </div>
           
-          <div className="lg:col-span-2">
+          <div className="w-full lg:w-2/3">
             <FileList 
               files={files}
               connectedAccount={accountAddress}
