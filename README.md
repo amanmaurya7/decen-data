@@ -1,4 +1,3 @@
-
 # Decentralized Data Keeper: Project Documentation
 
 ## Project Overview
