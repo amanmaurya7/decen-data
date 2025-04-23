@@ -1,16 +1,21 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import { Navigation } from "./Navigation";
+import { LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface HeaderProps {
   onConnect: () => void;
   isConnected: boolean;
   accountAddress: string;
   networkName: string;
+  onDisconnect?: () => void;
 }
 
-const Header = ({ onConnect, isConnected, accountAddress, networkName }: HeaderProps) => {
+const Header = ({ onConnect, isConnected, accountAddress, networkName, onDisconnect }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +25,16 @@ const Header = ({ onConnect, isConnected, accountAddress, networkName }: HeaderP
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleDisconnect = () => {
+    if (onDisconnect) {
+      onDisconnect();
+      toast({
+        title: "Wallet Disconnected",
+        description: "Your wallet has been disconnected successfully",
+      });
+    }
+  };
 
   return (
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-blockchain-darkBlue/95 shadow-md backdrop-blur-sm' : 'bg-transparent'}`}>
@@ -37,13 +52,26 @@ const Header = ({ onConnect, isConnected, accountAddress, networkName }: HeaderP
         </div>
         
         <div className="flex items-center space-x-4">
+          <Navigation showPinataSetup={isConnected} />
+          
           {isConnected ? (
-            <div className="flex items-center bg-blockchain-darkBlue border border-blockchain-purple/30 rounded-full pl-3 pr-4 py-1.5">
-              <div className="w-2 h-2 rounded-full bg-green-400 mr-2 animate-pulse"></div>
-              <div className="flex flex-col">
-                <p className="text-xs text-gray-400">{networkName}</p>
-                <p className="text-sm text-gray-200">{`${accountAddress.slice(0, 5)}...${accountAddress.slice(-4)}`}</p>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center bg-blockchain-darkBlue border border-blockchain-purple/30 rounded-full pl-3 pr-4 py-1.5">
+                <div className="w-2 h-2 rounded-full bg-green-400 mr-2 animate-pulse"></div>
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-400">{networkName}</p>
+                  <p className="text-sm text-gray-200">{`${accountAddress.slice(0, 5)}...${accountAddress.slice(-4)}`}</p>
+                </div>
               </div>
+              <Button 
+                variant="destructive" 
+                size="sm" 
+                onClick={handleDisconnect}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Disconnect
+              </Button>
             </div>
           ) : (
             <Button 

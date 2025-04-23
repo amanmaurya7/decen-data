@@ -423,6 +423,18 @@ const Index = () => {
     }
   };
   
+  const handleDisconnectWallet = () => {
+    setIsConnected(false);
+    setAccountAddress('');
+    setNetworkName('Not Connected');
+    setIsCorrectNetwork(false);
+    
+    toast.toast({
+      title: "Wallet Disconnected",
+      description: "Your wallet has been disconnected",
+    });
+  };
+
   const totalFiles = files.length;
   const formattedStorage = (totalStorage / (1024 * 1024)).toFixed(2);
   const currentFileViewers = files.find(f => f.id === currentlySharedFile)?.viewers.filter(
@@ -437,6 +449,7 @@ const Index = () => {
           isConnected={isConnected}
           accountAddress={accountAddress}
           networkName={networkName}
+          onDisconnect={handleDisconnectWallet}
         />
         <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
           <div className="mb-8">
@@ -460,6 +473,7 @@ const Index = () => {
         isConnected={isConnected}
         accountAddress={accountAddress}
         networkName={networkName}
+        onDisconnect={handleDisconnectWallet}
       />
       
       <main className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-8 flex flex-col gap-8">

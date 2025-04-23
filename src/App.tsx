@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { PinataSetup } from "./components/PinataSetup";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/pinata-setup" element={<PinataSetup />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
