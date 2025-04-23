@@ -1,4 +1,3 @@
-
 # DecenData - Decentralized Data Storage Platform
 
 ## About the Project
