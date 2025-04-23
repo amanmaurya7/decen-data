@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/Header';
@@ -24,6 +23,8 @@ import {
   deleteFile
 } from '@/utils/blockchainUtils';
 import { File, Folder, Lock, Upload, Check } from 'lucide-react';
+import { PinataSetup } from '@/components/PinataSetup';
+import { arePinataCredentialsSet } from '@/utils/ipfsUtils';
 
 interface FileInterface {
   id: string;
@@ -48,14 +49,14 @@ const Index = () => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [currentlySharedFile, setCurrentlySharedFile] = useState<string | null>(null);
   const [isShareProcessing, setIsShareProcessing] = useState(false);
-  
+  const [isPinataSetup, setIsPinataSetup] = useState(false);
+
   const toast = useToast();
 
   useEffect(() => {
     const checkConnection = async () => {
       if (window.ethereum) {
         try {
-          // Request accounts from MetaMask
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           
           if (accounts && accounts.length > 0) {
@@ -111,6 +112,10 @@ const Index = () => {
     };
   }, []);
   
+  useEffect(() => {
+    setIsPinataSetup(arePinataCredentialsSet());
+  }, []);
+
   const handleConnectWallet = async () => {
     try {
       const address = await connectWallet();
@@ -424,6 +429,30 @@ const Index = () => {
     v => v.toLowerCase() !== accountAddress.toLowerCase()
   ) || [];
 
+  if (!isPinataSetup) {
+    return (
+      <div className="min-h-screen bg-blockchain-darkBlue flex flex-col">
+        <Header 
+          onConnect={handleConnectWallet} 
+          isConnected={isConnected}
+          accountAddress={accountAddress}
+          networkName={networkName}
+        />
+        <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
+          <div className="mb-8">
+            <NetworkStatus 
+              isConnected={isConnected}
+              connectedNetwork={networkName}
+              isCorrectNetwork={isCorrectNetwork}
+              onSwitchNetwork={handleSwitchNetwork}
+            />
+          </div>
+          <PinataSetup />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-blockchain-darkBlue flex flex-col">
       <Header 
@@ -497,4 +526,3 @@ const Index = () => {
 };
 
 export default Index;
-

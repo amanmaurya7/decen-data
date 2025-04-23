@@ -1,26 +1,20 @@
-// IPFS utils using Pinata API for uploads
-// ---------------------------------------------------------------------------
-// IMPORTANT: Add your Pinata credentials to a .env file at the root of your project:
-// VITE_PINATA_API_KEY=your_key_here
-// VITE_PINATA_API_SECRET=your_secret_here
-//
-// Pinata Docs: https://docs.pinata.cloud/api-pinning/pin-file
-//
-// These VITE_ prefixed variables are automatically available to your Vite project via import.meta.env
-// ---------------------------------------------------------------------------
 
-const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY as string;
-const PINATA_API_SECRET = import.meta.env.VITE_PINATA_API_SECRET as string;
-
-if (!PINATA_API_KEY || !PINATA_API_SECRET) {
-  console.warn(
-    "Pinata API key/secret missing. Please add VITE_PINATA_API_KEY and VITE_PINATA_API_SECRET in your .env file."
-  );
-}
+// Get Pinata credentials from localStorage
+const getPinataCredentials = () => {
+  const apiKey = localStorage.getItem('PINATA_API_KEY');
+  const apiSecret = localStorage.getItem('PINATA_API_SECRET');
+  
+  if (!apiKey || !apiSecret) {
+    throw new Error('Pinata credentials not found. Please set up your API keys first.');
+  }
+  
+  return { apiKey, apiSecret };
+};
 
 // Upload a file to Pinata
 export const uploadToIPFS = async (file: File): Promise<string> => {
   try {
+    const { apiKey, apiSecret } = getPinataCredentials();
     const endpoint = "https://api.pinata.cloud/pinning/pinFileToIPFS";
     const formData = new FormData();
     formData.append("file", file);
@@ -28,9 +22,8 @@ export const uploadToIPFS = async (file: File): Promise<string> => {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
-        // Corrected headers according to Pinata documentation
-        pinata_api_key: PINATA_API_KEY,
-        pinata_secret_api_key: PINATA_API_SECRET,
+        pinata_api_key: apiKey,
+        pinata_secret_api_key: apiSecret,
       },
       body: formData,
     });
@@ -40,7 +33,6 @@ export const uploadToIPFS = async (file: File): Promise<string> => {
       throw new Error("Pinata upload failed: " + errorText);
     }
     const result = await response.json();
-    // Pinata returns IPFS hash under IpfsHash
     return result.IpfsHash;
   } catch (error) {
     console.error("Error uploading to Pinata:", error);
@@ -69,12 +61,13 @@ export const getIPFSGatewayURL = (ipfsHash: string): string => {
 // Unpin (delete) a file from Pinata by IPFS hash
 export const unpinFromIPFS = async (ipfsHash: string): Promise<void> => {
   try {
+    const { apiKey, apiSecret } = getPinataCredentials();
     const endpoint = `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`;
     const response = await fetch(endpoint, {
       method: "DELETE",
       headers: {
-        pinata_api_key: PINATA_API_KEY,
-        pinata_secret_api_key: PINATA_API_SECRET,
+        pinata_api_key: apiKey,
+        pinata_secret_api_key: apiSecret,
       },
     });
 
@@ -82,10 +75,16 @@ export const unpinFromIPFS = async (ipfsHash: string): Promise<void> => {
       const errText = await response.text();
       throw new Error("Failed to unpin from Pinata: " + errText);
     }
-    // Optionally: return something if you want
-    return;
   } catch (error) {
     console.error("Error unpinning from Pinata:", error);
     throw error;
   }
 };
+
+// Check if Pinata credentials are set
+export const arePinataCredentialsSet = (): boolean => {
+  const apiKey = localStorage.getItem('PINATA_API_KEY');
+  const apiSecret = localStorage.getItem('PINATA_API_SECRET');
+  return Boolean(apiKey && apiSecret);
+};
+

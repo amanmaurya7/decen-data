@@ -1,4 +1,3 @@
-
 # DecenData - Decentralized Data Storage Platform
 
 DecenData is a decentralized data storage platform that allows users to securely store and share files using blockchain technology and IPFS (InterPlanetary File System).
@@ -27,6 +26,18 @@ Before you begin, ensure you have the following installed:
 - Node.js (v16 or higher)
 - npm or yarn package manager
 - MetaMask wallet browser extension
+- Pinata account with API keys (get them from https://app.pinata.cloud/developers/api-keys)
+
+## Setting Up Your Pinata API Keys
+
+1. Create a free account on [Pinata](https://app.pinata.cloud)
+2. Go to https://app.pinata.cloud/developers/api-keys
+3. Create a new API key with the following permissions:
+   - pinFileToIPFS
+   - unpin
+4. Copy both your API key and API secret
+5. When you first launch the application, you'll be prompted to enter these credentials
+6. Your keys will be securely stored in your browser's local storage
 
 ## Environment Setup
 
@@ -105,4 +116,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For support, please open an issue in the GitHub repository or contact the development team.
-
