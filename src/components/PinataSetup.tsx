@@ -39,7 +39,8 @@ export const PinataSetup = () => {
       description: "Pinata credentials saved successfully",
     });
 
-    navigate('/');
+    // To ensure proper state refresh and auto-detection of credentials
+    window.location.href = '/';
   };
 
   return (

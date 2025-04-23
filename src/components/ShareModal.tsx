@@ -36,7 +36,8 @@ const ShareModal = ({
         <DialogHeader>
           <DialogTitle className="text-xl">Share Access</DialogTitle>
           <DialogDescription className="text-gray-400">
-            Add Ethereum addresses to grant access to this file
+            Add Ethereum addresses to grant access to this file.
+            Users with access can view and download this file.
           </DialogDescription>
         </DialogHeader>
         

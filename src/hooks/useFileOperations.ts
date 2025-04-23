@@ -214,11 +214,79 @@ export const useFileOperations = (
     }
   };
 
+  // Function to save a shared file to the user's account
+  const handleSaveSharedFile = async (sourceFile: FileInterface): Promise<string | null> => {
+    if (!isConnected || !isCorrectNetwork) {
+      toast({
+        title: "Cannot Save File",
+        description: "Please connect to the correct network",
+        variant: "destructive"
+      });
+      return null;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      const fileId = uuidv4();
+      
+      toast({ title: "Saving shared file to your account..." });
+      
+      // We don't need to download/upload to IPFS again, just use the same hash
+      const ipfsHash = sourceFile.ipfsHash;
+      
+      // Register the file in blockchain under the current user's account
+      toast({ title: "Recording on blockchain..." });
+      const success = await uploadFileToBlockchain(fileId, sourceFile.name, ipfsHash, sourceFile.size);
+      
+      if (success) {
+        const newFile: FileInterface = {
+          id: fileId,
+          name: sourceFile.name,
+          size: sourceFile.size,
+          type: sourceFile.type,
+          owner: accountAddress,
+          ipfsHash,
+          uploadDate: new Date(),
+          viewers: [accountAddress]
+        };
+        
+        setFiles(prevFiles => {
+          const updatedFiles = [newFile, ...prevFiles];
+          saveFilesToLocalStorage(updatedFiles);
+          return updatedFiles;
+        });
+        
+        setTotalStorage(prev => prev + sourceFile.size);
+        
+        toast({
+          title: "File Saved",
+          description: "Shared file has been saved to your account",
+          variant: "default"
+        });
+        
+        return fileId;
+      } else {
+        throw new Error("Failed to store on blockchain");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Save Failed",
+        description: error.message || "An error occurred while saving the file",
+        variant: "destructive"
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     isLoading,
     loadingFileId,
     handleFileUpload,
     handleFileDownload,
     handleFileDelete,
+    handleSaveSharedFile,
   };
 };

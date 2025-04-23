@@ -26,6 +26,8 @@ const Index = () => {
 
   const {
     files,
+    ownedFiles,
+    sharedFiles,
     totalStorage,
     isLoading,
     loadingFileId,
@@ -38,7 +40,8 @@ const Index = () => {
     handleFileDelete,
     handleOpenShareModal,
     handleShareAccess,
-    handleRevokeAccess
+    handleRevokeAccess,
+    saveSharedFileToOwned
   } = useFileManagement(accountAddress, isConnected, isCorrectNetwork);
 
   useEffect(() => {
@@ -90,6 +93,8 @@ const Index = () => {
 
       <MetricsSection 
         totalFiles={files.length}
+        ownedFiles={ownedFiles.length}
+        sharedFiles={sharedFiles.length}
         totalStorage={totalStorage}
       />
       
@@ -103,11 +108,13 @@ const Index = () => {
         
         <div className="w-full lg:w-2/3">
           <FileList 
-            files={files}
+            ownedFiles={ownedFiles}
+            sharedFiles={sharedFiles}
             connectedAccount={accountAddress}
             onDownload={handleFileDownload}
             onDelete={handleFileDelete}
             onShareAccess={handleOpenShareModal}
+            onSaveShared={saveSharedFileToOwned}
             isLoading={isLoading}
             loadingFileId={loadingFileId}
           />

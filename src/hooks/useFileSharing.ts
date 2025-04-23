@@ -26,16 +26,34 @@ export const useFileSharing = (
       return;
     }
     
+    // Normalize the address for consistent comparison
+    const normalizedAddress = address.toLowerCase();
+    
     setIsShareProcessing(true);
     
     try {
+      const currentFile = files.find(f => f.id === currentlySharedFile);
+      if (!currentFile) {
+        throw new Error("File not found");
+      }
+      
+      // Check if the user is trying to share with themselves (owner)
+      if (normalizedAddress === currentFile.owner.toLowerCase()) {
+        throw new Error("You already own this file");
+      }
+      
+      // Check if the file is already shared with this address
+      if (currentFile.viewers.some(v => v.toLowerCase() === normalizedAddress)) {
+        throw new Error("File is already shared with this address");
+      }
+      
       const success = await shareFileAccess(currentlySharedFile, address);
       
       if (success) {
         setFiles(prevFiles => {
           const updatedFiles = prevFiles.map(file => 
             file.id === currentlySharedFile 
-              ? { ...file, viewers: [...file.viewers.filter(v => v !== address), address] } 
+              ? { ...file, viewers: [...file.viewers, address] } 
               : file
           );
           saveFilesToLocalStorage(updatedFiles);

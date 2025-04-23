@@ -5,10 +5,12 @@ import { File, Folder, Lock } from "lucide-react";
 
 interface MetricsSectionProps {
   totalFiles: number;
+  ownedFiles: number;
+  sharedFiles: number;
   totalStorage: number;
 }
 
-export const MetricsSection = ({ totalFiles, totalStorage }: MetricsSectionProps) => {
+export const MetricsSection = ({ totalFiles, ownedFiles, sharedFiles, totalStorage }: MetricsSectionProps) => {
   const formattedStorage = (totalStorage / (1024 * 1024)).toFixed(2);
 
   return (
@@ -16,7 +18,7 @@ export const MetricsSection = ({ totalFiles, totalStorage }: MetricsSectionProps
       <MetricsCard 
         title="Total Files" 
         value={totalFiles} 
-        description="Securely stored files"
+        description={`${ownedFiles} owned · ${sharedFiles} shared`}
         icon={<File className="h-4 w-4" />} 
       />
       <MetricsCard 
