@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from "@/hooks/use-toast";
 import { uploadToIPFS, downloadFromIPFS, unpinFromIPFS } from '@/utils/ipfsUtils';
@@ -23,6 +23,38 @@ export interface FileInterface {
   viewers: string[];
 }
 
+// Helper function to save files to localStorage
+const saveFilesToLocalStorage = (files: FileInterface[]) => {
+  try {
+    // Convert Date objects to strings for JSON serialization
+    const filesForStorage = files.map(file => ({
+      ...file,
+      uploadDate: file.uploadDate.toISOString()
+    }));
+    localStorage.setItem('decendata_files', JSON.stringify(filesForStorage));
+  } catch (error) {
+    console.error("Error saving files to localStorage:", error);
+  }
+};
+
+// Helper function to load files from localStorage
+const loadFilesFromLocalStorage = (): FileInterface[] => {
+  try {
+    const filesString = localStorage.getItem('decendata_files');
+    if (!filesString) return [];
+    
+    // Convert date strings back to Date objects
+    const files = JSON.parse(filesString);
+    return files.map((file: any) => ({
+      ...file,
+      uploadDate: new Date(file.uploadDate)
+    }));
+  } catch (error) {
+    console.error("Error loading files from localStorage:", error);
+    return [];
+  }
+};
+
 export const useFileManagement = (accountAddress: string, isConnected: boolean, isCorrectNetwork: boolean) => {
   const [files, setFiles] = useState<FileInterface[]>([]);
   const [totalStorage, setTotalStorage] = useState(0);
@@ -33,6 +65,29 @@ export const useFileManagement = (accountAddress: string, isConnected: boolean, 
   const [isShareProcessing, setIsShareProcessing] = useState(false);
 
   const { toast } = useToast();
+
+  // Load files from localStorage when the component mounts or when wallet connects
+  useEffect(() => {
+    if (isConnected && accountAddress) {
+      const allFiles = loadFilesFromLocalStorage();
+      
+      // Filter files that are owned by or shared with the current account
+      const relevantFiles = allFiles.filter(file => 
+        file.owner.toLowerCase() === accountAddress.toLowerCase() ||
+        file.viewers.some(viewer => viewer.toLowerCase() === accountAddress.toLowerCase())
+      );
+      
+      setFiles(relevantFiles);
+      
+      // Calculate total storage
+      const totalSize = relevantFiles.reduce((sum, file) => sum + file.size, 0);
+      setTotalStorage(totalSize);
+    } else {
+      // Clear files when disconnected
+      setFiles([]);
+      setTotalStorage(0);
+    }
+  }, [isConnected, accountAddress]);
 
   const handleFileUpload = async (file: File) => {
     if (!isConnected) {
@@ -79,7 +134,16 @@ export const useFileManagement = (accountAddress: string, isConnected: boolean, 
           viewers: [accountAddress]
         };
         
-        setFiles(prev => [newFile, ...prev]);
+        // Update state
+        setFiles(prevFiles => {
+          const updatedFiles = [newFile, ...prevFiles];
+          
+          // Save to localStorage
+          saveFilesToLocalStorage(updatedFiles);
+          
+          return updatedFiles;
+        });
+        
         setTotalStorage(prev => prev + file.size);
         
         toast({
@@ -192,7 +256,16 @@ export const useFileManagement = (accountAddress: string, isConnected: boolean, 
           });
         }
         
-        setFiles(prev => prev.filter(f => f.id !== fileId));
+        // Update state
+        setFiles(prevFiles => {
+          const updatedFiles = prevFiles.filter(f => f.id !== fileId);
+          
+          // Save to localStorage
+          saveFilesToLocalStorage(updatedFiles);
+          
+          return updatedFiles;
+        });
+        
         setTotalStorage(prev => prev - file.size);
         
         toast({
@@ -230,13 +303,19 @@ export const useFileManagement = (accountAddress: string, isConnected: boolean, 
       const success = await shareFileAccess(currentlySharedFile, address);
       
       if (success) {
-        setFiles(prev => 
-          prev.map(file => 
+        // Update state
+        setFiles(prevFiles => {
+          const updatedFiles = prevFiles.map(file => 
             file.id === currentlySharedFile 
               ? { ...file, viewers: [...file.viewers.filter(v => v !== address), address] } 
               : file
-          )
-        );
+          );
+          
+          // Save to localStorage
+          saveFilesToLocalStorage(updatedFiles);
+          
+          return updatedFiles;
+        });
         
         toast({
           title: "Access Granted",
@@ -267,13 +346,19 @@ export const useFileManagement = (accountAddress: string, isConnected: boolean, 
       const success = await revokeFileAccess(currentlySharedFile, address);
       
       if (success) {
-        setFiles(prev => 
-          prev.map(file => 
+        // Update state
+        setFiles(prevFiles => {
+          const updatedFiles = prevFiles.map(file => 
             file.id === currentlySharedFile 
               ? { ...file, viewers: file.viewers.filter(v => v !== address) } 
               : file
-          )
-        );
+          );
+          
+          // Save to localStorage
+          saveFilesToLocalStorage(updatedFiles);
+          
+          return updatedFiles;
+        });
         
         toast({
           title: "Access Revoked",
