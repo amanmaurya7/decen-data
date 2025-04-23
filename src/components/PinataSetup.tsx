@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,40 +6,48 @@ import { useToast } from "@/hooks/use-toast";
 import { Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { savePinataCredentials } from "@/utils/ipfsUtils";
 
 export const PinataSetup = () => {
-  const [apiKey, setApiKey] = useState('');
-  const [apiSecret, setApiSecret] = useState('');
+  const [apiKey, setApiKey] = useState("");
+  const [apiSecret, setApiSecret] = useState("");
+  const [gateway, setGateway] = useState("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     const savedApiKey = localStorage.getItem('PINATA_API_KEY');
     const savedApiSecret = localStorage.getItem('PINATA_API_SECRET');
+    const savedGateway = localStorage.getItem('PINATA_GATEWAY');
     if (savedApiKey) setApiKey(savedApiKey);
     if (savedApiSecret) setApiSecret(savedApiSecret);
+    if (savedGateway) setGateway(savedGateway);
   }, []);
 
   const handleSave = () => {
-    if (!apiKey || !apiSecret) {
+    if (!apiKey || !apiSecret || !gateway) {
       toast({
-        title: "Error",
-        description: "Please enter both API key and API secret",
+        title: "Missing Fields",
+        description: "Please fill in all fields",
         variant: "destructive",
       });
       return;
     }
 
-    localStorage.setItem('PINATA_API_KEY', apiKey);
-    localStorage.setItem('PINATA_API_SECRET', apiSecret);
-
-    toast({
-      title: "Success",
-      description: "Pinata credentials saved successfully",
-    });
-
-    // To ensure proper state refresh and auto-detection of credentials
-    window.location.href = '/';
+    try {
+      savePinataCredentials(apiKey, apiSecret, gateway);
+      toast({
+        title: "Success",
+        description: "Pinata credentials saved successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save credentials",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -98,6 +105,18 @@ export const PinataSetup = () => {
                 value={apiSecret}
                 onChange={(e) => setApiSecret(e.target.value)}
                 placeholder="Enter your Pinata API secret"
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="gateway" className="text-sm font-medium">
+                Gateway
+              </label>
+              <Input
+                id="gateway"
+                type="text"
+                value={gateway}
+                onChange={(e) => setGateway(e.target.value)}
+                placeholder="Enter your Pinata gateway"
               />
             </div>
           </div>

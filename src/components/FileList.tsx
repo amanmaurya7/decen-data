@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Eye, EyeOff, Loader, Trash, User, Upload, Share } from "lucide-react";
@@ -121,55 +120,80 @@ const FileList = ({
         </div>
         
         <div className="flex space-x-2">
-          {/* Download button */}
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-blockchain-purple text-blockchain-purple hover:bg-blockchain-purple/10"
-            onClick={() => onDownload(file.id)}
-            disabled={isLoading && loadingFileId === file.id}
-          >
-            {isLoading && loadingFileId === file.id ? (
-              <Loader className="h-4 w-4 animate-spin" />
-            ) : (
-              <Download className="h-4 w-4" />
-            )}
-          </Button>
-
-          {/* Save to my files button - only for shared files */}
-          {isShared && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
-              onClick={() => onSaveShared(file.id)}
-              disabled={isLoading}
-            >
-              <Upload className="h-4 w-4" />
-            </Button>
-          )}
-          
-          {/* File owner actions */}
-          {isOwner(file.owner) && (
-            <>
+          <Tooltip>
+            <TooltipTrigger asChild>
               <Button
                 size="sm"
                 variant="outline"
-                className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
-                onClick={() => onShareAccess(file.id)}
-              >
-                <Share className="h-4 w-4" />
-              </Button>
-              
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-red-500 text-red-500 hover:bg-red-500/10"
-                onClick={() => onDelete(file.id)}
+                className="border-blockchain-purple text-blockchain-purple hover:bg-blockchain-purple/10"
+                onClick={() => onDownload(file.id)}
                 disabled={isLoading && loadingFileId === file.id}
               >
-                <Trash className="h-4 w-4" />
+                {isLoading && loadingFileId === file.id ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
               </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Download file</p>
+            </TooltipContent>
+          </Tooltip>
+
+          {isShared && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
+                  onClick={() => onSaveShared(file.id)}
+                  disabled={isLoading}
+                >
+                  <Upload className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Save to my files</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          
+          {isOwner(file.owner) && (
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
+                    onClick={() => onShareAccess(file.id)}
+                  >
+                    <Share className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Share file</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-red-500 text-red-500 hover:bg-red-500/10"
+                    onClick={() => onDelete(file.id)}
+                    disabled={isLoading && loadingFileId === file.id}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete file</p>
+                </TooltipContent>
+              </Tooltip>
             </>
           )}
         </div>

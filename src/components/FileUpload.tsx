@@ -1,9 +1,9 @@
-
 import { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface FileUploadProps {
   onUpload: (file: File) => Promise<void>;
@@ -99,19 +99,28 @@ const FileUpload = ({ onUpload, isUploading }: FileUploadProps) => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end border-t border-gray-800 bg-card/50 p-4">
-        <Button
-          onClick={handleUpload}
-          disabled={!selectedFile || isUploading}
-          className="bg-blockchain-purple hover:bg-blockchain-darkPurple text-white"
-        >
-          {isUploading ? (
-            <>
-              <Loader className="mr-2 h-4 w-4 animate-spin" /> Processing...
-            </>
-          ) : (
-            "Upload to Blockchain"
-          )}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={handleUpload}
+              disabled={!selectedFile || isUploading}
+              className="bg-blockchain-purple hover:bg-blockchain-darkPurple text-white"
+            >
+              {isUploading ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2 h-4 w-4" /> Upload to Blockchain
+                </>
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Upload file to decentralized storage</p>
+          </TooltipContent>
+        </Tooltip>
       </CardFooter>
     </Card>
   );
