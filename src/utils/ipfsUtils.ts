@@ -88,3 +88,13 @@ export const arePinataCredentialsSet = (): boolean => {
   return Boolean(apiKey && apiSecret);
 };
 
+// Save Pinata credentials to localStorage
+export const savePinataCredentials = (apiKey: string, apiSecret: string, gateway?: string): void => {
+  localStorage.setItem('PINATA_API_KEY', apiKey);
+  localStorage.setItem('PINATA_API_SECRET', apiSecret);
+  
+  // Optionally save gateway if provided
+  if (gateway) {
+    localStorage.setItem('PINATA_GATEWAY', gateway);
+  }
+};
