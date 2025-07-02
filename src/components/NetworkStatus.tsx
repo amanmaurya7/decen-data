@@ -31,13 +31,15 @@ const NetworkStatus = ({
 
   if (!isConnected) {
     return (
-      <div className="bg-blockchain-darkBlue/50 border border-blockchain-purple/10 rounded-md p-4">
+      <div className="glass-effect gradient-border rounded-xl p-6 card-hover">
         <div className="flex items-start">
-          <Info className="text-blockchain-purple mr-3 h-5 w-5 mt-0.5" />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center mr-4">
+            <Info className="text-blockchain-purple h-6 w-6" />
+          </div>
           <div>
-            <h3 className="font-medium text-white">Connect Your Wallet</h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Connect your Ethereum wallet to access decentralized storage features
+            <h3 className="font-semibold text-white text-lg">Connect Your Wallet</h3>
+            <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+              Connect your Ethereum wallet to access decentralized storage features and manage your files securely on the blockchain
             </p>
           </div>
         </div>
