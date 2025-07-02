@@ -214,22 +214,42 @@ const FileList = ({
   );
 
   return (
-    <Card className="border border-blockchain-purple/20 bg-card">
+    <Card className="gradient-border glass-effect card-hover">
       <Tabs defaultValue="owned">
-        <CardHeader className="bg-gradient-to-r from-blockchain-darkBlue to-blockchain-darkPurple/50 pb-2">
+        <CardHeader className="bg-gradient-to-r from-blockchain-purple/10 via-blockchain-darkPurple/10 to-blockchain-teal/10 border-b border-blockchain-purple/20 pb-4">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-white">Your Files</CardTitle>
-              <CardDescription className="text-gray-300 mb-4">
-                Securely stored on decentralized storage
+              <CardTitle className="text-white text-2xl font-bold flex items-center">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blockchain-purple to-blockchain-teal flex items-center justify-center mr-3">
+                  <Upload className="h-4 w-4 text-white" />
+                </div>
+                Your Files
+              </CardTitle>
+              <CardDescription className="text-gray-300 mt-2">
+                Securely stored on IPFS with blockchain verification
               </CardDescription>
             </div>
-            <TabsList className="bg-blockchain-darkBlue/70">
-              <TabsTrigger value="owned" className="data-[state=active]:bg-blockchain-purple">My Files</TabsTrigger>
-              <TabsTrigger value="shared" className="data-[state=active]:bg-blockchain-teal">
+            <TabsList className="glass-effect border border-blockchain-purple/20">
+              <TabsTrigger 
+                value="owned" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blockchain-purple data-[state=active]:to-blockchain-darkPurple data-[state=active]:text-white font-medium"
+              >
+                My Files
+                {ownedFiles.length > 0 && (
+                  <Badge variant="secondary" className="ml-2 bg-blockchain-purple/20 text-blockchain-purple border-blockchain-purple/30">
+                    {ownedFiles.length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="shared" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blockchain-teal data-[state=active]:to-blockchain-purple data-[state=active]:text-white font-medium"
+              >
                 Shared Files
                 {sharedFiles.length > 0 && (
-                  <Badge variant="destructive" className="ml-2 bg-blockchain-teal text-white">{sharedFiles.length}</Badge>
+                  <Badge variant="secondary" className="ml-2 bg-blockchain-teal/20 text-blockchain-teal border-blockchain-teal/30">
+                    {sharedFiles.length}
+                  </Badge>
                 )}
               </TabsTrigger>
             </TabsList>
@@ -239,14 +259,17 @@ const FileList = ({
         <TabsContent value="owned" className="m-0">
           <CardContent className="p-0">
             {ownedFiles.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-400">No files found</p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Upload your first file to get started
+              <div className="text-center py-16">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center mb-6">
+                  <Upload className="h-12 w-12 text-blockchain-purple" />
+                </div>
+                <p className="text-xl font-semibold text-gray-300 mb-2">No files found</p>
+                <p className="text-sm text-gray-500">
+                  Upload your first file to get started with decentralized storage
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-800">
+              <div className="divide-y divide-blockchain-purple/10">
                 {ownedFiles.map(file => renderFileItem(file))}
               </div>
             )}
@@ -256,21 +279,27 @@ const FileList = ({
         <TabsContent value="shared" className="m-0">
           <CardContent className="p-0">
             {sharedFiles.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-400">No shared files found</p>
-                <p className="text-sm text-gray-500 mt-2">
+              <div className="text-center py-16">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blockchain-teal/20 to-blockchain-purple/20 flex items-center justify-center mb-6">
+                  <Eye className="h-12 w-12 text-blockchain-teal" />
+                </div>
+                <p className="text-xl font-semibold text-gray-300 mb-2">No shared files found</p>
+                <p className="text-sm text-gray-500">
                   Files shared with you will appear here
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-800">
+              <div className="divide-y divide-blockchain-teal/10">
                 {sharedFiles.map(file => renderFileItem(file, true))}
               </div>
             )}
           </CardContent>
           {sharedFiles.length > 0 && (
-            <CardFooter className="bg-blockchain-darkBlue/30 p-3 text-xs text-gray-400">
-              <p>Files shared with you can be saved to your account by clicking the upload icon</p>
+            <CardFooter className="glass-effect border-t border-blockchain-teal/20 p-4">
+              <div className="flex items-center text-xs text-gray-400">
+                <Eye className="h-4 w-4 mr-2 text-blockchain-teal" />
+                <p>Files shared with you can be saved to your account by clicking the upload icon</p>
+              </div>
             </CardFooter>
           )}
         </TabsContent>
