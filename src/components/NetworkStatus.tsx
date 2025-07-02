@@ -49,17 +49,19 @@ const NetworkStatus = ({
 
   if (!isCorrectNetwork) {
     return (
-      <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-md p-4">
+      <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-500/30 rounded-xl p-6 card-hover">
         <div className="flex items-start">
-          <Info className="text-yellow-500 mr-3 h-5 w-5 mt-0.5" />
-          <div>
-            <h3 className="font-medium text-white">Wrong Network</h3>
-            <p className="text-sm text-gray-300 mt-1">
-              Connected to <span className="font-medium">{connectedNetwork}</span> but this app requires Hardhat or Localhost network.
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center mr-4">
+            <Info className="text-yellow-500 h-6 w-6" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-white text-lg">Wrong Network</h3>
+            <p className="text-sm text-gray-300 mt-2 leading-relaxed">
+              Connected to <span className="font-semibold text-yellow-400">{connectedNetwork}</span> but this app requires Hardhat or Localhost network for development.
             </p>
             <button 
               onClick={handleSwitchNetwork}
-              className="mt-2 px-3 py-1 text-sm bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 rounded-md transition-colors"
+              className="mt-4 px-4 py-2 text-sm bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 text-yellow-400 border border-yellow-500/30 rounded-lg transition-all duration-300 card-hover font-medium"
             >
               Switch Network
             </button>
