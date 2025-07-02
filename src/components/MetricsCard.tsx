@@ -11,17 +11,19 @@ interface MetricsCardProps {
 
 const MetricsCard = ({ title, value, description, icon, className = "" }: MetricsCardProps) => {
   return (
-    <Card className={`border border-blockchain-purple/20 bg-card ${className}`}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-gray-400">{title}</CardTitle>
-        <div className="h-8 w-8 rounded-full bg-blockchain-purple/10 text-blockchain-purple flex items-center justify-center">
+    <Card className={`gradient-border glass-effect card-hover ${className}`}>
+      <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardTitle className="text-sm font-semibold text-gray-300 uppercase tracking-wide">{title}</CardTitle>
+        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 text-blockchain-purple flex items-center justify-center shadow-lg">
           {icon}
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-white">{value}</div>
+      <CardContent className="pt-0">
+        <div className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
+          {value}
+        </div>
         {description && (
-          <p className="text-xs text-gray-500 mt-1">{description}</p>
+          <p className="text-xs text-gray-400 leading-relaxed">{description}</p>
         )}
       </CardContent>
     </Card>
