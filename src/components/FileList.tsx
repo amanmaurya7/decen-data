@@ -65,22 +65,22 @@ const FileList = ({
     );
   };
    const renderFileItem = (file: FileInterface, isShared: boolean = false) => (
-    <div key={file.id} className="p-6 hover:bg-gradient-to-r hover:from-blockchain-purple/5 hover:to-blockchain-teal/5 transition-all duration-300 group border-l-4 border-transparent hover:border-blockchain-purple">
+    <div key={file.id} className="p-6 hover:bg-gradient-to-r hover:from-primary/5 hover:to-blue-500/5 transition-all duration-300 group border-l-4 border-transparent hover:border-primary rounded-r-lg">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center mr-3">
-              <Upload className="h-5 w-5 text-blockchain-purple" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center mr-3">
+              <Upload className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white group-hover:text-blockchain-purple transition-colors">{file.name}</h3>
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{file.name}</h3>
               <div className="flex items-center mt-1">
                 {isOwner(file.owner) ? (
-                  <Badge variant="outline" className="border-blockchain-purple/50 bg-blockchain-purple/10 text-blockchain-purple text-xs mr-2">
+                  <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary text-xs mr-2">
                     <User className="mr-1 h-3 w-3" /> Owner
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="border-blockchain-teal/50 bg-blockchain-teal/10 text-blockchain-teal text-xs mr-2">
+                  <Badge variant="outline" className="border-blue-500/50 bg-blue-500/10 text-blue-600 text-xs mr-2">
                     <Eye className="mr-1 h-3 w-3" /> Shared
                   </Badge>
                 )}
@@ -88,24 +88,24 @@ const FileList = ({
             </div>
           </div>
           
-          <div className="flex items-center text-sm text-gray-400 mb-3 space-x-4">
-            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+          <div className="flex items-center text-sm text-muted-foreground mb-3 space-x-4">
+            <span className="px-2 py-1 bg-muted rounded-md">
               {(file.size / (1024 * 1024)).toFixed(2)} MB
             </span>
-            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+            <span className="px-2 py-1 bg-muted rounded-md">
               {file.type || "Unknown type"}
             </span>
-            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+            <span className="px-2 py-1 bg-muted rounded-md">
               {formatDate(file.uploadDate)}
             </span>
           </div>
           
           <div className="flex items-center text-xs space-x-4">
             <div className="flex items-center">
-              <span className="text-gray-500 mr-2">Owner:</span>
+              <span className="text-muted-foreground mr-2">Owner:</span>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-blockchain-purple font-mono bg-blockchain-purple/10 px-2 py-1 rounded">
+                  <span className="text-primary font-mono bg-primary/10 px-2 py-1 rounded">
                     {truncateAddress(file.owner)}
                   </span>
                 </TooltipTrigger>
@@ -116,10 +116,10 @@ const FileList = ({
             </div>
             
             <div className="flex items-center">
-              <span className="text-gray-500 mr-2">IPFS:</span>
+              <span className="text-muted-foreground mr-2">IPFS:</span>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-blockchain-teal font-mono bg-blockchain-teal/10 px-2 py-1 rounded">
+                  <span className="text-blue-600 font-mono bg-blue-500/10 px-2 py-1 rounded">
                     {file.ipfsHash.substring(0, 12)}...
                   </span>
                 </TooltipTrigger>
@@ -137,7 +137,7 @@ const FileList = ({
               <Button
                 size="sm"
                 variant="outline"
-                className="border-blockchain-purple/30 text-blockchain-purple hover:bg-blockchain-purple/10 hover:border-blockchain-purple card-hover"
+                className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary card-hover"
                 onClick={() => onDownload(file.id)}
                 disabled={isLoading && loadingFileId === file.id}
               >
@@ -159,7 +159,7 @@ const FileList = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-blockchain-teal/30 text-blockchain-teal hover:bg-blockchain-teal/10 hover:border-blockchain-teal card-hover"
+                  className="border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-500 card-hover"
                   onClick={() => onSaveShared(file.id)}
                   disabled={isLoading}
                 >
@@ -179,7 +179,7 @@ const FileList = ({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-blockchain-teal/30 text-blockchain-teal hover:bg-blockchain-teal/10 hover:border-blockchain-teal card-hover"
+                    className="border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-500 card-hover"
                     onClick={() => onShareAccess(file.id)}
                   >
                     <Share className="h-4 w-4" />
@@ -195,7 +195,7 @@ const FileList = ({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500 card-hover"
+                    className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950 card-hover"
                     onClick={() => onDelete(file.id)}
                     disabled={isLoading && loadingFileId === file.id}
                   >

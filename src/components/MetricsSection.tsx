@@ -32,7 +32,7 @@ export const MetricsSection = ({ totalFiles, ownedFiles, sharedFiles, totalStora
         value="Encrypted" 
         description="End-to-end encryption"
         icon={<Lock className="h-4 w-4" />} 
-        className="bg-gradient-to-br from-blockchain-darkBlue to-blockchain-purple/30"
+        className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800"
       />
     </div>
   );
