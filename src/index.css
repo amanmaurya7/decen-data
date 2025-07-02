@@ -232,9 +232,10 @@
   }
 
   .professional-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50
+    @apply bg-white/95 backdrop-blur-xl border border-gray-200
            shadow-lg hover:shadow-xl transition-all duration-300
-           hover:border-border;
+           hover:border-gray-300 dark:bg-card/80 dark:border-border/50
+           dark:hover:border-border;
   }
 
   .professional-button {
