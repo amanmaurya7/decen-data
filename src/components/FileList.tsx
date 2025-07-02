@@ -64,58 +64,70 @@ const FileList = ({
       viewer.toLowerCase() === connectedAccount.toLowerCase()
     );
   };
-  
-  const renderFileItem = (file: FileInterface, isShared: boolean = false) => (
-    <div key={file.id} className="p-4 hover:bg-blockchain-darkBlue/30 transition-colors">
+   const renderFileItem = (file: FileInterface, isShared: boolean = false) => (
+    <div key={file.id} className="p-6 hover:bg-gradient-to-r hover:from-blockchain-purple/5 hover:to-blockchain-teal/5 transition-all duration-300 group border-l-4 border-transparent hover:border-blockchain-purple">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center mb-1">
-            <h3 className="text-lg font-medium mr-2">{file.name}</h3>
-            {isOwner(file.owner) ? (
-              <Badge variant="outline" className="border-blockchain-purple text-blockchain-purple text-xs">
-                <User className="mr-1 h-3 w-3" /> Owner
-              </Badge>
-            ) : (
-              <Badge variant="outline" className="border-blockchain-teal text-blockchain-teal text-xs">
-                <Eye className="mr-1 h-3 w-3" /> Shared
-              </Badge>
-            )}
+          <div className="flex items-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center mr-3">
+              <Upload className="h-5 w-5 text-blockchain-purple" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white group-hover:text-blockchain-purple transition-colors">{file.name}</h3>
+              <div className="flex items-center mt-1">
+                {isOwner(file.owner) ? (
+                  <Badge variant="outline" className="border-blockchain-purple/50 bg-blockchain-purple/10 text-blockchain-purple text-xs mr-2">
+                    <User className="mr-1 h-3 w-3" /> Owner
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="border-blockchain-teal/50 bg-blockchain-teal/10 text-blockchain-teal text-xs mr-2">
+                    <Eye className="mr-1 h-3 w-3" /> Shared
+                  </Badge>
+                )}
+              </div>
+            </div>
           </div>
           
-          <div className="flex items-center text-sm text-gray-400 mb-2">
-            <span>{(file.size / (1024 * 1024)).toFixed(2)} MB</span>
-            <span className="mx-2">•</span>
-            <span>{file.type || "Unknown type"}</span>
-            <span className="mx-2">•</span>
-            <span>{formatDate(file.uploadDate)}</span>
+          <div className="flex items-center text-sm text-gray-400 mb-3 space-x-4">
+            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+              {(file.size / (1024 * 1024)).toFixed(2)} MB
+            </span>
+            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+              {file.type || "Unknown type"}
+            </span>
+            <span className="px-2 py-1 bg-blockchain-darkBlue/30 rounded-md">
+              {formatDate(file.uploadDate)}
+            </span>
           </div>
           
-          <div className="flex items-center text-xs">
-            <span className="text-gray-500">Owner: </span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="ml-1 text-blockchain-purple">
-                  {truncateAddress(file.owner)}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{file.owner}</p>
-              </TooltipContent>
-            </Tooltip>
+          <div className="flex items-center text-xs space-x-4">
+            <div className="flex items-center">
+              <span className="text-gray-500 mr-2">Owner:</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-blockchain-purple font-mono bg-blockchain-purple/10 px-2 py-1 rounded">
+                    {truncateAddress(file.owner)}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="font-mono">{file.owner}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             
-            <span className="mx-2 text-gray-600">|</span>
-            
-            <span className="text-gray-500">IPFS: </span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="ml-1 text-blockchain-teal">
-                  {file.ipfsHash.substring(0, 10)}...
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{file.ipfsHash}</p>
-              </TooltipContent>
-            </Tooltip>
+            <div className="flex items-center">
+              <span className="text-gray-500 mr-2">IPFS:</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-blockchain-teal font-mono bg-blockchain-teal/10 px-2 py-1 rounded">
+                    {file.ipfsHash.substring(0, 12)}...
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="font-mono break-all max-w-xs">{file.ipfsHash}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
         
@@ -125,7 +137,7 @@ const FileList = ({
               <Button
                 size="sm"
                 variant="outline"
-                className="border-blockchain-purple text-blockchain-purple hover:bg-blockchain-purple/10"
+                className="border-blockchain-purple/30 text-blockchain-purple hover:bg-blockchain-purple/10 hover:border-blockchain-purple card-hover"
                 onClick={() => onDownload(file.id)}
                 disabled={isLoading && loadingFileId === file.id}
               >
@@ -147,7 +159,7 @@ const FileList = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
+                  className="border-blockchain-teal/30 text-blockchain-teal hover:bg-blockchain-teal/10 hover:border-blockchain-teal card-hover"
                   onClick={() => onSaveShared(file.id)}
                   disabled={isLoading}
                 >
@@ -167,7 +179,7 @@ const FileList = ({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-blockchain-teal text-blockchain-teal hover:bg-blockchain-teal/10"
+                    className="border-blockchain-teal/30 text-blockchain-teal hover:bg-blockchain-teal/10 hover:border-blockchain-teal card-hover"
                     onClick={() => onShareAccess(file.id)}
                   >
                     <Share className="h-4 w-4" />
@@ -183,7 +195,7 @@ const FileList = ({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-red-500 text-red-500 hover:bg-red-500/10"
+                    className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500 card-hover"
                     onClick={() => onDelete(file.id)}
                     disabled={isLoading && loadingFileId === file.id}
                   >
