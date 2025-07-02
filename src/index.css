@@ -91,40 +91,97 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-.file-drop-area {
-  @apply border-2 border-dashed border-blockchain-purple/50 rounded-lg p-12 flex flex-col items-center justify-center transition-all;
-}
-
-.file-drop-area:hover {
-  @apply border-blockchain-purple bg-blockchain-purple/5;
-}
-
-.bg-grid-white\/\[0\.02\] {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-}
-
+/* Modern Custom Styles */
 @layer components {
+  .gradient-bg {
+    background: linear-gradient(135deg, 
+      rgba(79, 70, 229, 0.1) 0%, 
+      rgba(59, 130, 246, 0.05) 25%, 
+      rgba(16, 185, 129, 0.1) 50%, 
+      rgba(139, 92, 246, 0.05) 75%, 
+      rgba(99, 102, 241, 0.1) 100%);
+  }
+
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .glass-morphism-dark {
+    background: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
   .glow-effect {
-    box-shadow: 0 0 15px theme('colors.blockchain.purple');
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
     transition: all 0.3s ease-in-out;
   }
+
   .glow-effect:hover {
-    box-shadow: 0 0 25px theme('colors.blockchain.purple');
+    box-shadow: 0 0 25px rgba(79, 70, 229, 0.5);
   }
-  
-  .glass-effect {
-    background: rgba(26, 31, 44, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(155, 135, 245, 0.2);
+
+  .glow-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(79, 70, 229, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
   }
-  
+
+  .glow-effect:hover::before {
+    left: 100%;
+  }
+
+  .floating-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
+
+  .rotate-animation {
+    animation: rotate 20s linear infinite;
+  }
+
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
+  }
+
   .gradient-border {
     position: relative;
-    background: linear-gradient(135deg, rgba(155, 135, 245, 0.1), rgba(79, 209, 197, 0.1));
+    background: linear-gradient(135deg, 
+      rgba(79, 70, 229, 0.1), 
+      rgba(59, 130, 246, 0.05));
     border: 1px solid transparent;
   }
   
@@ -133,57 +190,105 @@
     position: absolute;
     inset: 0;
     padding: 1px;
-    background: linear-gradient(135deg, #9b87f5, #4FD1C5);
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
     border-radius: inherit;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
   }
-  
-  .card-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .floating-animation {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite alternate;
-  }
-}
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
+  .neon-text {
+    text-shadow: 0 0 5px rgba(79, 70, 229, 0.5),
+                 0 0 10px rgba(79, 70, 229, 0.3),
+                 0 0 15px rgba(79, 70, 229, 0.2);
   }
-  to {
-    transform: rotate(360deg);
+
+  .professional-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.12);
+  }
+
+  .professional-shadow-lg {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12),
+                0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .bg-grid-white\/\[0\.02\] {
+    background-image: radial-gradient(circle, rgba(79, 70, 229, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .file-drop-area {
+    @apply border-2 border-dashed border-primary/30 rounded-xl p-8 
+           flex flex-col items-center justify-center transition-all 
+           duration-300 ease-in-out hover:border-primary hover:bg-primary/5
+           focus-within:border-primary focus-within:bg-primary/5;
+  }
+
+  .professional-input {
+    @apply border border-border/60 bg-background/50 backdrop-blur-sm
+           transition-all duration-200 ease-in-out
+           focus:border-primary focus:bg-background
+           hover:border-border;
+  }
+
+  .professional-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50
+           shadow-lg hover:shadow-xl transition-all duration-300
+           hover:border-border;
+  }
+
+  .professional-button {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground
+           shadow-md hover:shadow-lg transition-all duration-200
+           focus:ring-2 focus:ring-primary/20 focus:outline-none;
   }
 }
 
 @keyframes float {
-  0%, 100% { 
-    transform: translateY(0px); 
-  }
-  50% { 
-    transform: translateY(-10px); 
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 5px rgba(155, 135, 245, 0.5);
+  0%, 100% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.8); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  100% {
-    box-shadow: 0 0 20px rgba(155, 135, 245, 0.8), 0 0 30px rgba(155, 135, 245, 0.4);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.rotate-animation {
-  animation: rotate 10s linear infinite;
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.5);
 }
