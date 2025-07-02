@@ -50,7 +50,7 @@ const Header = ({ onConnect, isConnected, accountAddress, networkName, onDisconn
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               DecenData
             </h1>
-            <p className="text-xs text-muted-foreground mt-1 font-medium">Decentralized File Storage</p>
+            <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1 font-medium">Decentralized File Storage</p>
           </div>
         </div>
         

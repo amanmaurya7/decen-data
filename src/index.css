@@ -93,10 +93,14 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Force light mode for better visibility */
+    color: #1f2937;
   }
 
   html {
     scroll-behavior: smooth;
+    /* Force light mode */
+    background: white;
   }
 }
 
