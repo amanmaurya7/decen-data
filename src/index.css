@@ -94,7 +94,8 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     /* Force light mode for better visibility */
-    color: #1f2937;
+    background: #f8fafc !important;
+    color: #111827 !important;
   }
 
   html {
@@ -296,4 +297,111 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(79, 70, 229, 0.5);
+}
+
+/* CRITICAL: Force high contrast text for visibility */
+@layer utilities {
+  /* Override all text colors for maximum visibility */
+  .text-white,
+  .text-gray-100,
+  .text-gray-200,
+  .text-gray-300,
+  .text-gray-400,
+  .text-gray-500,
+  .text-slate-100,
+  .text-slate-200,
+  .text-slate-300,
+  .text-slate-400,
+  .text-slate-500 {
+    color: #111827 !important;
+  }
+
+  /* Ensure card titles and headers are always visible */
+  h1, h2, h3, h4, h5, h6,
+  .card-title,
+  [class*="CardTitle"],
+  [class*="CardDescription"] {
+    color: #111827 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Make sure all text in cards is visible */
+  .card *,
+  [class*="Card"] *,
+  .glass-effect *,
+  .glass-morphism * {
+    color: #111827 !important;
+  }
+
+  /* Preserve accent colors but make them darker for visibility */
+  .text-blockchain-purple {
+    color: #5b21b6 !important;
+  }
+
+  .text-blockchain-teal {
+    color: #0f766e !important;
+  }
+
+  .text-blue-400,
+  .text-blue-500 {
+    color: #1d4ed8 !important;
+  }
+
+  .text-red-500,
+  .text-destructive {
+    color: #dc2626 !important;
+  }
+
+  .text-green-500,
+  .text-success {
+    color: #059669 !important;
+  }
+
+  .text-yellow-500,
+  .text-warning {
+    color: #d97706 !important;
+  }
+
+  /* Force placeholder text to be visible */
+  input::placeholder,
+  textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure all paragraphs and spans are visible */
+  p, span, div, label, li {
+    color: #111827 !important;
+  }
+
+  /* Special override for muted text */
+  .text-muted-foreground {
+    color: #4b5563 !important;
+  }
+}
+
+/* Final safety net - force dark text on everything */
+body * {
+  color: #111827 !important;
+}
+
+/* Allow specific color overrides to still work */
+body .text-blockchain-purple {
+  color: #5b21b6 !important;
+}
+
+body .text-blockchain-teal {
+  color: #0f766e !important;
+}
+
+body .text-destructive {
+  color: #dc2626 !important;
+}
+
+body .text-success {
+  color: #059669 !important;
+}
+
+body .text-warning {
+  color: #d97706 !important;
 }
