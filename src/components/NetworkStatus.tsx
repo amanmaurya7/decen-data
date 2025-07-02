@@ -72,19 +72,24 @@ const NetworkStatus = ({
   }
 
   return (
-    <div className="bg-green-900/10 border border-green-700/30 rounded-md p-4">
+    <div className="bg-gradient-to-r from-green-900/10 to-emerald-900/10 border border-green-500/30 rounded-xl p-6 card-hover">
       <div className="flex items-start">
-        <div className="relative mr-3 mt-0.5">
-          <div className="h-5 w-5 rounded-full border-2 border-green-500/30"></div>
-          <div className="absolute inset-1 flex items-center justify-center">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+        <div className="relative mr-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full border-2 border-green-500/30 flex items-center justify-center">
+              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
           </div>
         </div>
         <div>
-          <h3 className="font-medium text-white">Connected to Network</h3>
-          <p className="text-sm text-gray-300 mt-1">
-            You're connected to <span className="font-medium text-green-400">{connectedNetwork}</span> network and ready to use decentralized storage.
+          <h3 className="font-semibold text-white text-lg">Connected to Network</h3>
+          <p className="text-sm text-gray-300 mt-2 leading-relaxed">
+            You're connected to <span className="font-semibold text-green-400">{connectedNetwork}</span> network and ready to use decentralized storage features.
           </p>
+          <div className="flex items-center mt-3">
+            <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></div>
+            <span className="text-xs text-green-400 font-medium">Ready for blockchain operations</span>
+          </div>
         </div>
       </div>
     </div>
