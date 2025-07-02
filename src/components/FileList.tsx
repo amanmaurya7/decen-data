@@ -214,40 +214,40 @@ const FileList = ({
   );
 
   return (
-    <Card className="gradient-border glass-effect card-hover">
+    <Card className="professional-card card-hover">
       <Tabs defaultValue="owned">
-        <CardHeader className="bg-gradient-to-r from-blockchain-purple/10 via-blockchain-darkPurple/10 to-blockchain-teal/10 border-b border-blockchain-purple/20 pb-4">
+        <CardHeader className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/20 dark:via-indigo-950/20 dark:to-purple-950/20 border-b border-border/50 pb-4">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-white text-2xl font-bold flex items-center">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blockchain-purple to-blockchain-teal flex items-center justify-center mr-3">
+              <CardTitle className="text-foreground text-2xl font-bold flex items-center">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-3">
                   <Upload className="h-4 w-4 text-white" />
                 </div>
                 Your Files
               </CardTitle>
-              <CardDescription className="text-gray-300 mt-2">
+              <CardDescription className="text-muted-foreground mt-2">
                 Securely stored on IPFS with blockchain verification
               </CardDescription>
             </div>
-            <TabsList className="glass-effect border border-blockchain-purple/20">
+            <TabsList className="professional-card border border-border/50">
               <TabsTrigger 
                 value="owned" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blockchain-purple data-[state=active]:to-blockchain-darkPurple data-[state=active]:text-white font-medium"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-primary-foreground font-medium"
               >
                 My Files
                 {ownedFiles.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 bg-blockchain-purple/20 text-blockchain-purple border-blockchain-purple/30">
+                  <Badge variant="secondary" className="ml-2 bg-primary/20 text-primary border-primary/30">
                     {ownedFiles.length}
                   </Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger 
                 value="shared" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blockchain-teal data-[state=active]:to-blockchain-purple data-[state=active]:text-white font-medium"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white font-medium"
               >
                 Shared Files
                 {sharedFiles.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 bg-blockchain-teal/20 text-blockchain-teal border-blockchain-teal/30">
+                  <Badge variant="secondary" className="ml-2 bg-blue-500/20 text-blue-600 border-blue-500/30">
                     {sharedFiles.length}
                   </Badge>
                 )}
@@ -260,16 +260,16 @@ const FileList = ({
           <CardContent className="p-0">
             {ownedFiles.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center mb-6">
-                  <Upload className="h-12 w-12 text-blockchain-purple" />
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center mb-6">
+                  <Upload className="h-12 w-12 text-primary" />
                 </div>
-                <p className="text-xl font-semibold text-gray-300 mb-2">No files found</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xl font-semibold text-foreground mb-2">No files found</p>
+                <p className="text-sm text-muted-foreground">
                   Upload your first file to get started with decentralized storage
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-blockchain-purple/10">
+              <div className="divide-y divide-border/50">
                 {ownedFiles.map(file => renderFileItem(file))}
               </div>
             )}
@@ -280,24 +280,24 @@ const FileList = ({
           <CardContent className="p-0">
             {sharedFiles.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blockchain-teal/20 to-blockchain-purple/20 flex items-center justify-center mb-6">
-                  <Eye className="h-12 w-12 text-blockchain-teal" />
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center mb-6">
+                  <Eye className="h-12 w-12 text-blue-600" />
                 </div>
-                <p className="text-xl font-semibold text-gray-300 mb-2">No shared files found</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xl font-semibold text-foreground mb-2">No shared files found</p>
+                <p className="text-sm text-muted-foreground">
                   Files shared with you will appear here
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-blockchain-teal/10">
+              <div className="divide-y divide-border/50">
                 {sharedFiles.map(file => renderFileItem(file, true))}
               </div>
             )}
           </CardContent>
           {sharedFiles.length > 0 && (
-            <CardFooter className="glass-effect border-t border-blockchain-teal/20 p-4">
-              <div className="flex items-center text-xs text-gray-400">
-                <Eye className="h-4 w-4 mr-2 text-blockchain-teal" />
+            <CardFooter className="bg-muted/30 border-t border-border/50 p-4">
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Eye className="h-4 w-4 mr-2 text-blue-600" />
                 <p>Files shared with you can be saved to your account by clicking the upload icon</p>
               </div>
             </CardFooter>
