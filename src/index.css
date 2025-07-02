@@ -103,6 +103,10 @@
   @apply border-blockchain-purple bg-blockchain-purple/5;
 }
 
+.bg-grid-white\/\[0\.02\] {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
 @layer components {
   .glow-effect {
     box-shadow: 0 0 15px theme('colors.blockchain.purple');
