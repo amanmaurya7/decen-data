@@ -52,28 +52,48 @@ export const PinataSetup = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Key className="h-5 w-5" />
-            Pinata API Setup
-          </CardTitle>
-          <CardDescription>
-            Enter your Pinata API credentials to enable file storage
-          </CardDescription>
+      <Card className="gradient-border glass-effect card-hover">
+        <CardHeader className="bg-gradient-to-r from-blockchain-purple/10 via-blockchain-darkPurple/10 to-blockchain-teal/10 border-b border-blockchain-purple/20">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blockchain-purple/20 to-blockchain-teal/20 flex items-center justify-center">
+              <Key className="h-6 w-6 text-blockchain-purple" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-white">
+                Pinata API Setup
+              </CardTitle>
+              <CardDescription className="text-gray-300 mt-1">
+                Enter your Pinata API credentials to enable secure IPFS file storage
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <Alert>
-            <AlertDescription>
-              <h3 className="font-semibold mb-2">How to get your Pinata API Keys:</h3>
-              <ol className="list-decimal ml-4 space-y-2">
-                <li>Go to <a href="https://app.pinata.cloud/developers/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Pinata API Keys page</a></li>
+        <CardContent className="space-y-8 p-6">
+          <Alert className="gradient-border glass-effect">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-3">
+              <Key className="h-4 w-4 text-blue-400" />
+            </div>
+            <AlertDescription className="text-gray-300">
+              <h3 className="font-semibold mb-3 text-white">How to get your Pinata API Keys:</h3>
+              <ol className="list-decimal ml-4 space-y-3 text-sm leading-relaxed">
+                <li>
+                  Go to{' '}
+                  <a 
+                    href="https://app.pinata.cloud/developers/api-keys" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blockchain-purple hover:text-blockchain-teal transition-colors font-medium underline"
+                  >
+                    Pinata API Keys page
+                  </a>
+                </li>
                 <li>Click on "New Key" button</li>
                 <li>Give your key a name (e.g., "DecenData App")</li>
-                <li>Enable the following Admin permissions:
-                  <ul className="list-disc ml-4 mt-1">
-                    <li>pinFileToIPFS</li>
-                    <li>unpin</li>
+                <li>
+                  Enable the following Admin permissions:
+                  <ul className="list-disc ml-4 mt-2 space-y-1">
+                    <li className="text-blockchain-teal">pinFileToIPFS</li>
+                    <li className="text-blockchain-teal">unpin</li>
                   </ul>
                 </li>
                 <li>Click "Create Key" to generate your API credentials</li>
@@ -82,9 +102,12 @@ export const PinataSetup = () => {
             </AlertDescription>
           </Alert>
           
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="apiKey" className="text-sm font-medium">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <label htmlFor="apiKey" className="text-sm font-semibold text-gray-300 flex items-center">
+                <div className="w-4 h-4 rounded bg-blockchain-purple/20 flex items-center justify-center mr-2">
+                  <Key className="h-2 w-2 text-blockchain-purple" />
+                </div>
                 API Key
               </label>
               <Input
@@ -93,10 +116,14 @@ export const PinataSetup = () => {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="Enter your Pinata API key"
+                className="glass-effect border-blockchain-purple/30 text-white placeholder:text-gray-500 focus:border-blockchain-purple card-hover"
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="apiSecret" className="text-sm font-medium">
+            <div className="space-y-3">
+              <label htmlFor="apiSecret" className="text-sm font-semibold text-gray-300 flex items-center">
+                <div className="w-4 h-4 rounded bg-blockchain-purple/20 flex items-center justify-center mr-2">
+                  <Key className="h-2 w-2 text-blockchain-purple" />
+                </div>
                 API Secret
               </label>
               <Input
@@ -105,10 +132,14 @@ export const PinataSetup = () => {
                 value={apiSecret}
                 onChange={(e) => setApiSecret(e.target.value)}
                 placeholder="Enter your Pinata API secret"
+                className="glass-effect border-blockchain-purple/30 text-white placeholder:text-gray-500 focus:border-blockchain-purple card-hover"
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="gateway" className="text-sm font-medium">
+            <div className="space-y-3">
+              <label htmlFor="gateway" className="text-sm font-semibold text-gray-300 flex items-center">
+                <div className="w-4 h-4 rounded bg-blockchain-teal/20 flex items-center justify-center mr-2">
+                  <Key className="h-2 w-2 text-blockchain-teal" />
+                </div>
                 Gateway
               </label>
               <Input
@@ -116,18 +147,27 @@ export const PinataSetup = () => {
                 type="text"
                 value={gateway}
                 onChange={(e) => setGateway(e.target.value)}
-                placeholder="Enter your Pinata gateway"
+                placeholder="e.g., https://gateway.pinata.cloud"
+                className="glass-effect border-blockchain-teal/30 text-white placeholder:text-gray-500 focus:border-blockchain-teal card-hover"
               />
             </div>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="glass-effect border-t border-blockchain-purple/20 p-6">
           <div className="flex w-full gap-4">
-            <Button onClick={handleSave} className="flex-1">
+            <Button 
+              onClick={handleSave} 
+              className="flex-1 bg-gradient-to-r from-blockchain-purple to-blockchain-darkPurple hover:from-blockchain-darkPurple hover:to-blockchain-purple card-hover shadow-lg"
+            >
+              <Key className="mr-2 h-4 w-4" />
               Save Credentials
             </Button>
             {window.location.pathname === '/pinata-setup' && (
-              <Button variant="outline" onClick={() => navigate('/')} className="flex-1">
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/')} 
+                className="flex-1 glass-effect border-blockchain-teal/30 text-blockchain-teal hover:bg-blockchain-teal/10 card-hover"
+              >
                 Back to Home
               </Button>
             )}
