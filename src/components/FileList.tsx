@@ -343,3 +343,118 @@ const FileList = ({
                 {isConfigured && (
                   <Badge variant="secondary" className="ml-3 bg-purple-500/20 text-purple-600 border-purple-500/30">
                     <Sparkles className="h-3 w-3 mr-1" />
+                    AI Enabled
+                  </Badge>
+                )}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground mt-2">
+                Securely stored on IPFS with blockchain verification
+                {isConfigured && " • Enhanced with AI analysis"}
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <TabsList className="professional-card border border-border/50">
+                <TabsTrigger 
+                  value="owned" 
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-primary-foreground font-medium"
+                >
+                  My Files
+                  {ownedFiles.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 bg-primary/20 text-primary border-primary/30">
+                      {ownedFiles.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="shared" 
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white font-medium"
+                >
+                  Shared Files
+                  {sharedFiles.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 bg-blue-500/20 text-blue-600 border-blue-500/30">
+                      {sharedFiles.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+              
+              {isConfigured && (ownedFiles.length > 0 || sharedFiles.length > 0) && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleBatchAnalyze}
+                      disabled={isAnalyzing}
+                      className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                    >
+                      {isAnalyzing ? (
+                        <Loader className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <Brain className="h-4 w-4 mr-2" />
+                      )}
+                      Analyze All
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Run AI analysis on all files</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          </div>
+        </CardHeader>
+        
+        <TabsContent value="owned" className="m-0">
+          <CardContent className="p-0">
+            {ownedFiles.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center mb-6">
+                  <Upload className="h-12 w-12 text-primary" />
+                </div>
+                <p className="text-xl font-semibold text-foreground mb-2">No files found</p>
+                <p className="text-sm text-muted-foreground">
+                  Upload your first file to get started with decentralized storage
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {ownedFiles.map(file => renderFileItem(file))}
+              </div>
+            )}
+          </CardContent>
+        </TabsContent>
+        
+        <TabsContent value="shared" className="m-0">
+          <CardContent className="p-0">
+            {sharedFiles.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center mb-6">
+                  <Eye className="h-12 w-12 text-blue-600" />
+                </div>
+                <p className="text-xl font-semibold text-foreground mb-2">No shared files found</p>
+                <p className="text-sm text-muted-foreground">
+                  Files shared with you will appear here
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {sharedFiles.map(file => renderFileItem(file, true))}
+              </div>
+            )}
+          </CardContent>
+          {sharedFiles.length > 0 && (
+            <CardFooter className="bg-muted/30 border-t border-border/50 p-4">
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Eye className="h-4 w-4 mr-2 text-blue-600" />
+                <p>Files shared with you can be saved to your account by clicking the upload icon</p>
+              </div>
+            </CardFooter>
+          )}
+        </TabsContent>
+      </Tabs>
+    </Card>
+  );
+};
+
+export default FileList;
