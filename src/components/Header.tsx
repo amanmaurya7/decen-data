@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Navigation } from "./Navigation";
@@ -55,7 +54,10 @@ const Header = ({ onConnect, isConnected, accountAddress, networkName, onDisconn
         </div>
         
         <div className="flex items-center space-x-4">
-          <Navigation showPinataSetup={isConnected} />
+          <Navigation 
+            showPinataSetup={isConnected} 
+            showAISettings={isConnected}
+          />
           
           {isConnected ? (
             <div className="flex items-center gap-4">
