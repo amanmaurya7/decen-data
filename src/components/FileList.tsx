@@ -1,20 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Eye, EyeOff, Loader, Trash, User, Upload, Share } from "lucide-react";
+import { Download, Eye, EyeOff, Loader, Trash, User, Upload, Share, Brain, Shield, Sparkles, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface FileInterface {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  owner: string;
-  ipfsHash: string;
-  uploadDate: Date;
-  viewers: string[];
-}
+import { useAIAnalysis } from '@/hooks/useAIAnalysis';
+import { FileInterface } from '@/types/file';
 
 interface FileListProps {
   ownedFiles: FileInterface[];
@@ -39,6 +30,8 @@ const FileList = ({
   isLoading,
   loadingFileId
 }: FileListProps) => {
+  const { analyzeFile, analyzeFileSecurityRisk, batchAnalyzeFiles, isAnalyzing, isConfigured } = useAIAnalysis();
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
@@ -64,7 +57,30 @@ const FileList = ({
       viewer.toLowerCase() === connectedAccount.toLowerCase()
     );
   };
-   const renderFileItem = (file: FileInterface, isShared: boolean = false) => (
+
+  const handleAnalyzeFile = async (file: FileInterface) => {
+    await analyzeFile(file);
+  };
+
+  const handleSecurityAnalysis = async (file: FileInterface) => {
+    await analyzeFileSecurityRisk(file);
+  };
+
+  const handleBatchAnalyze = async () => {
+    const allFiles = [...ownedFiles, ...sharedFiles];
+    await batchAnalyzeFiles(allFiles);
+  };
+
+  const getSensitivityColor = (sensitivity: string) => {
+    switch (sensitivity) {
+      case 'high': return 'text-red-600 bg-red-50 border-red-200';
+      case 'medium': return 'text-amber-600 bg-amber-50 border-amber-200';
+      case 'low': return 'text-green-600 bg-green-50 border-green-200';
+      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+
+  const renderFileItem = (file: FileInterface, isShared: boolean = false) => (
     <div key={file.id} className="p-6 hover:bg-gradient-to-r hover:from-primary/5 hover:to-blue-500/5 transition-all duration-300 group border-l-4 border-transparent hover:border-primary rounded-r-lg">
       <div className="flex items-start justify-between">
         <div className="flex-1">
@@ -72,21 +88,77 @@ const FileList = ({
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center mr-3">
               <Upload className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{file.name}</h3>
-              <div className="flex items-center mt-1">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{file.name}</h3>
+                {file.analysis && (
+                  <Badge variant="outline" className={`text-xs ${getSensitivityColor(file.analysis.sensitivity)}`}>
+                    <Shield className="h-3 w-3 mr-1" />
+                    {file.analysis.sensitivity}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center mt-1 gap-2">
                 {isOwner(file.owner) ? (
-                  <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary text-xs mr-2">
+                  <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary text-xs">
                     <User className="mr-1 h-3 w-3" /> Owner
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="border-blue-500/50 bg-blue-500/10 text-blue-600 text-xs mr-2">
+                  <Badge variant="outline" className="border-blue-500/50 bg-blue-500/10 text-blue-600 text-xs">
                     <Eye className="mr-1 h-3 w-3" /> Shared
+                  </Badge>
+                )}
+                {file.analysis && (
+                  <Badge variant="outline" className="text-xs bg-purple-50 text-purple-600 border-purple-200">
+                    {file.analysis.category}
                   </Badge>
                 )}
               </div>
             </div>
           </div>
+          
+          {/* AI Analysis Summary */}
+          {file.analysis && (
+            <div className="mb-3 p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-100">
+              <p className="text-sm text-gray-700 mb-2">{file.analysis.summary}</p>
+              <div className="flex flex-wrap gap-1">
+                {file.analysis.tags.slice(0, 4).map((tag, index) => (
+                  <Badge key={index} variant="secondary" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+                {file.analysis.tags.length > 4 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{file.analysis.tags.length - 4}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Security Analysis */}
+          {file.securityAnalysis && (
+            <div className={`mb-3 p-3 rounded-lg border ${
+              file.securityAnalysis.riskLevel === 'high' 
+                ? 'bg-red-50 border-red-200' 
+                : file.securityAnalysis.riskLevel === 'medium'
+                ? 'bg-amber-50 border-amber-200'
+                : 'bg-green-50 border-green-200'
+            }`}>
+              <div className="flex items-center gap-2 mb-2">
+                <AlertTriangle className={`h-4 w-4 ${
+                  file.securityAnalysis.riskLevel === 'high' ? 'text-red-600' :
+                  file.securityAnalysis.riskLevel === 'medium' ? 'text-amber-600' : 'text-green-600'
+                }`} />
+                <span className="text-sm font-medium">Security Risk: {file.securityAnalysis.riskLevel}</span>
+              </div>
+              {file.securityAnalysis.concerns.length > 0 && (
+                <p className="text-xs text-gray-600">
+                  {file.securityAnalysis.concerns[0]}
+                </p>
+              )}
+            </div>
+          )}
           
           <div className="flex items-center text-sm text-muted-foreground mb-3 space-x-4">
             <span className="px-2 py-1 bg-muted rounded-md">
@@ -131,83 +203,127 @@ const FileList = ({
           </div>
         </div>
         
-        <div className="flex space-x-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary card-hover"
-                onClick={() => onDownload(file.id)}
-                disabled={isLoading && loadingFileId === file.id}
-              >
-                {isLoading && loadingFileId === file.id ? (
-                  <Loader className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Download file</p>
-            </TooltipContent>
-          </Tooltip>
+        <div className="flex flex-col space-y-2">
+          {/* AI Analysis Actions */}
+          {isConfigured && (
+            <div className="flex space-x-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300 card-hover"
+                    onClick={() => handleAnalyzeFile(file)}
+                    disabled={isAnalyzing}
+                  >
+                    <Brain className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>AI Analysis</p>
+                </TooltipContent>
+              </Tooltip>
 
-          {isShared && (
+              {isOwner(file.owner) && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 card-hover"
+                      onClick={() => handleSecurityAnalysis(file)}
+                      disabled={isAnalyzing}
+                    >
+                      <Shield className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Security Analysis</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          )}
+
+          {/* Main Actions */}
+          <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-500 card-hover"
-                  onClick={() => onSaveShared(file.id)}
-                  disabled={isLoading}
+                  className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary card-hover"
+                  onClick={() => onDownload(file.id)}
+                  disabled={isLoading && loadingFileId === file.id}
                 >
-                  <Upload className="h-4 w-4" />
+                  {isLoading && loadingFileId === file.id ? (
+                    <Loader className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Save to my files</p>
+                <p>Download file</p>
               </TooltipContent>
             </Tooltip>
-          )}
-          
-          {isOwner(file.owner) && (
-            <>
+
+            {isShared && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
                     className="border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-500 card-hover"
-                    onClick={() => onShareAccess(file.id)}
+                    onClick={() => onSaveShared(file.id)}
+                    disabled={isLoading}
                   >
-                    <Share className="h-4 w-4" />
+                    <Upload className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Share file</p>
+                  <p>Save to my files</p>
                 </TooltipContent>
               </Tooltip>
-              
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950 card-hover"
-                    onClick={() => onDelete(file.id)}
-                    disabled={isLoading && loadingFileId === file.id}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Delete file</p>
-                </TooltipContent>
-              </Tooltip>
-            </>
-          )}
+            )}
+            
+            {isOwner(file.owner) && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-500 card-hover"
+                      onClick={() => onShareAccess(file.id)}
+                    >
+                      <Share className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Share file</p>
+                  </TooltipContent>
+                </Tooltip>
+                
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950 card-hover"
+                      onClick={() => onDelete(file.id)}
+                      disabled={isLoading && loadingFileId === file.id}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Delete file</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -224,88 +340,6 @@ const FileList = ({
                   <Upload className="h-4 w-4 text-white" />
                 </div>
                 Your Files
-              </CardTitle>
-              <CardDescription className="text-muted-foreground mt-2">
-                Securely stored on IPFS with blockchain verification
-              </CardDescription>
-            </div>
-            <TabsList className="professional-card border border-border/50">
-              <TabsTrigger 
-                value="owned" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-primary-foreground font-medium"
-              >
-                My Files
-                {ownedFiles.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 bg-primary/20 text-primary border-primary/30">
-                    {ownedFiles.length}
-                  </Badge>
-                )}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="shared" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white font-medium"
-              >
-                Shared Files
-                {sharedFiles.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 bg-blue-500/20 text-blue-600 border-blue-500/30">
-                    {sharedFiles.length}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            </TabsList>
-          </div>
-        </CardHeader>
-        
-        <TabsContent value="owned" className="m-0">
-          <CardContent className="p-0">
-            {ownedFiles.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center mb-6">
-                  <Upload className="h-12 w-12 text-primary" />
-                </div>
-                <p className="text-xl font-semibold text-foreground mb-2">No files found</p>
-                <p className="text-sm text-muted-foreground">
-                  Upload your first file to get started with decentralized storage
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-border/50">
-                {ownedFiles.map(file => renderFileItem(file))}
-              </div>
-            )}
-          </CardContent>
-        </TabsContent>
-        
-        <TabsContent value="shared" className="m-0">
-          <CardContent className="p-0">
-            {sharedFiles.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center mb-6">
-                  <Eye className="h-12 w-12 text-blue-600" />
-                </div>
-                <p className="text-xl font-semibold text-foreground mb-2">No shared files found</p>
-                <p className="text-sm text-muted-foreground">
-                  Files shared with you will appear here
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-border/50">
-                {sharedFiles.map(file => renderFileItem(file, true))}
-              </div>
-            )}
-          </CardContent>
-          {sharedFiles.length > 0 && (
-            <CardFooter className="bg-muted/30 border-t border-border/50 p-4">
-              <div className="flex items-center text-xs text-muted-foreground">
-                <Eye className="h-4 w-4 mr-2 text-blue-600" />
-                <p>Files shared with you can be saved to your account by clicking the upload icon</p>
-              </div>
-            </CardFooter>
-          )}
-        </TabsContent>
-      </Tabs>
-    </Card>
-  );
-};
-
-export default FileList;
+                {isConfigured && (
+                  <Badge variant="secondary" className="ml-3 bg-purple-500/20 text-purple-600 border-purple-500/30">
+                    <Sparkles className="h-3 w-3 mr-1" />
