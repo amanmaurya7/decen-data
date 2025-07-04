@@ -6,7 +6,7 @@ interface PerplexityResponse {
   }>;
 }
 
-interface FileAnalysisResult {
+export interface FileAnalysisResult {
   summary: string;
   tags: string[];
   category: string;
@@ -15,14 +15,14 @@ interface FileAnalysisResult {
   recommendations: string[];
 }
 
-interface SecurityAnalysis {
+export interface SecurityAnalysis {
   riskLevel: 'low' | 'medium' | 'high';
   concerns: string[];
   recommendations: string[];
   shouldEncrypt: boolean;
 }
 
-interface StorageInsight {
+export interface StorageInsight {
   duplicateRisk: number;
   archiveRecommendation: boolean;
   optimalSharing: string[];
