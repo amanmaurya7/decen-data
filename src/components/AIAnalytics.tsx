@@ -18,6 +18,7 @@ import {
   Loader
 } from "lucide-react";
 import { useAIAnalysis } from '@/hooks/useAIAnalysis';
+import { StorageInsight, SecurityAnalysis } from '@/utils/aiAnalysisUtils';
 import { FileInterface } from '@/types/file';
 
 interface AIAnalyticsProps {
@@ -37,8 +38,8 @@ export const AIAnalytics: React.FC<AIAnalyticsProps> = ({ files }) => {
   } = useAIAnalysis();
 
   const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [optimizationInsights, setOptimizationInsights] = useState<any[]>([]);
-  const [securityRisks, setSecurityRisks] = useState<any[]>([]);
+  const [optimizationInsights, setOptimizationInsights] = useState<StorageInsight[]>([]);
+  const [securityRisks, setSecurityRisks] = useState<SecurityAnalysis[]>([]);
   const [lastAnalysisDate, setLastAnalysisDate] = useState<Date | null>(null);
 
   // Calculate analysis statistics
