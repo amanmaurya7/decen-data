@@ -9,6 +9,7 @@ import ShareModal from '@/components/ShareModal';
 import { PinataSetup } from '@/components/PinataSetup';
 import { AISearch } from '@/components/AISearch';
 import { AIAnalytics } from '@/components/AIAnalytics';
+import { AIToolbar } from '@/components/AIToolbar';
 import { arePinataCredentialsSet } from '@/utils/ipfsUtils';
 import { isPerplexityConfigured } from '@/utils/aiAnalysisUtils';
 import { useState, useEffect } from 'react';
@@ -118,6 +119,17 @@ const Index = () => {
         sharedFiles={sharedFiles.length}
         totalStorage={totalStorage}
       />
+
+      {/* AI Toolbar - Show when AI is configured and there are files */}
+      {isAIConfigured && files.length > 0 && (
+        <AIToolbar 
+          files={[...ownedFiles, ...sharedFiles]}
+          onAnalysisComplete={() => {
+            // Refresh file data or trigger re-render
+            console.log('AI analysis completed');
+          }}
+        />
+      )}
       
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
         {/* Upload Section */}
