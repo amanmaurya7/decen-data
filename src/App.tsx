@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { PinataSetup } from "./components/PinataSetup";
+import { AISettings } from "./components/AISettings";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/pinata-setup" element={<PinataSetup />} />
+              <Route path="/ai-settings" element={<AISettings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
