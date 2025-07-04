@@ -216,19 +216,7 @@ const Index = () => {
           
           <TabsContent value="analytics" className="mt-6">
             {isAIConfigured ? (
-              <div className="grid gap-6">
-                {/* Analytics content would go here - placeholder for now */}
-                <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
-                  <Brain className="h-16 w-16 text-purple-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">AI Analytics Dashboard</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Comprehensive AI-powered insights about your file storage patterns
-                  </p>
-                  <Badge variant="outline" className="text-purple-600 border-purple-200">
-                    Coming Soon
-                  </Badge>
-                </div>
-              </div>
+              <AIAnalytics files={[...ownedFiles, ...sharedFiles]} />
             ) : (
               <div className="text-center py-12">
                 <Brain className="h-16 w-16 text-gray-400 mx-auto mb-4" />
