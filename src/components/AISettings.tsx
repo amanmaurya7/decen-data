@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Key, Settings, Shield, Zap, BarChart3 } from "lucide-react";
+import { Brain, Key, Settings, Shield, Zap, BarChart3, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { Layout } from '@/components/Layout';
+import { useWallet } from '@/hooks/useWallet';
 import { 
   setPerplexityApiKey, 
   getPerplexityApiKey, 
@@ -18,6 +21,15 @@ export const AISettings = () => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  const {
+    isConnected,
+    accountAddress,
+    networkName,
+    handleConnectWallet,
+    handleDisconnectWallet
+  } = useWallet();
 
   useEffect(() => {
     const currentKey = getPerplexityApiKey();
@@ -66,7 +78,45 @@ export const AISettings = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <Layout 
+      isConnected={isConnected}
+      accountAddress={accountAddress}
+      networkName={networkName}
+      onConnect={handleConnectWallet}
+      onDisconnect={handleDisconnectWallet}
+    >
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/')}
+              className="p-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                AI Settings
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Configure AI features and manage your Perplexity API integration
+              </p>
+            </div>
+          </div>
+          <Badge 
+            variant={isConfigured ? "default" : "secondary"}
+            className={isConfigured 
+              ? "bg-green-500/20 text-green-700 border-green-500/30" 
+              : "bg-amber-500/20 text-amber-700 border-amber-500/30"
+            }
+          >
+            {isConfigured ? "AI Enabled" : "Setup Required"}
+          </Badge>
+        </div>
+
+        <div className="space-y-6">
       <Card className="professional-card">
         <CardHeader className="bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 dark:from-purple-950/20 dark:via-indigo-950/20 dark:to-blue-950/20 border-b border-border/50">
           <CardTitle className="text-foreground flex items-center text-xl">
