@@ -319,6 +319,8 @@ export const AISettings = () => {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+        </div>
+      </div>
+    </Layout>
   );
 };
