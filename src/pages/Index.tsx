@@ -8,6 +8,7 @@ import FileList from '@/components/FileList';
 import ShareModal from '@/components/ShareModal';
 import { PinataSetup } from '@/components/PinataSetup';
 import { AISearch } from '@/components/AISearch';
+import { AIAnalytics } from '@/components/AIAnalytics';
 import { arePinataCredentialsSet } from '@/utils/ipfsUtils';
 import { isPerplexityConfigured } from '@/utils/aiAnalysisUtils';
 import { useState, useEffect } from 'react';
