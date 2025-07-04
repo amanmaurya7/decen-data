@@ -91,7 +91,12 @@ export const AIAnalytics: React.FC<AIAnalyticsProps> = ({ files }) => {
     if (!isConfigured || analyzedFiles.length === 0) return;
     
     try {
-      const insights = await generateOptimizationInsights(analyzedFiles as any);
+      // Convert FileInterface to the expected format
+      const fileData = analyzedFiles.map(file => ({
+        ...file,
+        analysis: getFileAnalysis(file.id)
+      }));
+      const insights = await generateOptimizationInsights(fileData);
       setOptimizationInsights(insights);
     } catch (error) {
       console.error('Failed to generate insights:', error);
@@ -102,7 +107,12 @@ export const AIAnalytics: React.FC<AIAnalyticsProps> = ({ files }) => {
     if (!isConfigured || analyzedFiles.length === 0) return;
     
     try {
-      await generateInsightReport(analyzedFiles as any);
+      // Convert FileInterface to the expected format
+      const fileData = analyzedFiles.map(file => ({
+        ...file,
+        analysis: getFileAnalysis(file.id)
+      }));
+      await generateInsightReport(fileData);
     } catch (error) {
       console.error('Failed to generate report:', error);
     }
