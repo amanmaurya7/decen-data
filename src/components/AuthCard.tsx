@@ -64,6 +64,13 @@ export const AuthCard = () => {
       return;
     }
 
+    // Check password complexity requirements
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      return;
+    }
+
     setIsLoading(true);
     try {
       await register(formData.email, formData.password, formData.name);
@@ -194,7 +201,7 @@ export const AuthCard = () => {
                     id="register-password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a password (min. 6 characters)"
+                    placeholder="Create a secure password"
                     value={formData.password}
                     onChange={handleInputChange}
                     required
@@ -214,6 +221,9 @@ export const AuthCard = () => {
                     )}
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Must be at least 6 characters with uppercase, lowercase, and number
+                </p>
               </div>
 
               <div className="space-y-2">

@@ -85,7 +85,14 @@ export const useApi = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Request failed' }));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
+        
+        // Handle validation errors from express-validator
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          const errorMessage = errorData.errors.map((err: { msg: string }) => err.msg).join(', ');
+          throw new Error(errorMessage);
+        }
+        
+        throw new Error(errorData.message || errorData.error || `HTTP ${response.status}`);
       }
 
       const contentType = response.headers.get('content-type');

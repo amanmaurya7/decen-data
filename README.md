@@ -7,6 +7,7 @@ A complete decentralized file storage platform with React frontend, Node.js/Expr
 **Backend API**: https://decen-data.onrender.com
 
 The backend is deployed on Render with all production configurations including:
+
 - MongoDB Atlas database
 - Pinata IPFS integration
 - JWT authentication
@@ -36,6 +37,7 @@ The backend is already deployed and live at `https://decen-data.onrender.com`. T
 For the frontend, update the API configuration:
 
 1. Update `.env` file:
+
    ```
    VITE_API_BASE_URL=https://your-backend-url.onrender.com/api
    VITE_BACKEND_URL=https://your-backend-url.onrender.com
