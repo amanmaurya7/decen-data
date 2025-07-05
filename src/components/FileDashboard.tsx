@@ -128,7 +128,8 @@ export const FileDashboard = () => {
   };
 
   const handleDownload = (fileId: string, fileName: string) => {
-    const downloadUrl = `http://localhost:5000/api/files/${fileId}/download`;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://decen-data.onrender.com';
+    const downloadUrl = `${backendUrl}/api/files/${fileId}/download`;
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = fileName;
