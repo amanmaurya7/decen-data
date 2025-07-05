@@ -2,6 +2,61 @@ import { useState, useEffect } from 'react';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Type definitions
+interface FileMetadata {
+  description?: string;
+  tags?: string[];
+  isPublic?: boolean;
+}
+
+interface GetFilesOptions {
+  page?: number;
+  limit?: number;
+  search?: string;
+  tags?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+interface ShareFileData {
+  email: string;
+  permissions?: string[];
+  expiresIn?: string;
+  message?: string;
+}
+
+interface AISearchOptions {
+  includePublic?: boolean;
+  limit?: number;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+  createdAt: string;
+  lastLogin?: string;
+}
+
+interface FileData {
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  ipfsHash: string;
+  description: string;
+  tags: string[];
+  isPublic: boolean;
+  uploadDate: string;
+  downloadCount: number;
+  lastAccessed?: string;
+  owner: User;
+  downloadUrl: string;
+  shareUrl: string;
+  aiAnalysis?: any;
+  securityAnalysis?: any;
+}
+
 // Custom hook for API requests
 export const useApi = () => {
   const getAuthHeaders = () => {
@@ -9,7 +64,7 @@ export const useApi = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  const apiRequest = async (endpoint, options = {}) => {
+  const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
       'Content-Type': 'application/json',
@@ -49,9 +104,9 @@ export const useApi = () => {
 
 // Authentication hook
 export const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { apiRequest } = useApi();
 
   useEffect(() => {
@@ -96,7 +151,7 @@ export const useAuth = () => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     try {
       setError(null);
       const response = await apiRequest('/auth/login', {
@@ -108,12 +163,13 @@ export const useAuth = () => {
       setUser(response.user);
       return response;
     } catch (error) {
-      setError(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
       throw error;
     }
   };
 
-  const register = async (email, password, name) => {
+  const register = async (email: string, password: string, name?: string) => {
     try {
       setError(null);
       const response = await apiRequest('/auth/register', {
@@ -125,7 +181,8 @@ export const useAuth = () => {
       setUser(response.user);
       return response;
     } catch (error) {
-      setError(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
       throw error;
     }
   };
@@ -171,12 +228,12 @@ export const useAuth = () => {
 
 // File management hook
 export const useFiles = () => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { apiRequest } = useApi();
 
-  const uploadFile = async (file, metadata = {}) => {
+  const uploadFile = async (file: File, metadata: FileMetadata = {}) => {
     try {
       setError(null);
       setIsLoading(true);
@@ -186,7 +243,7 @@ export const useFiles = () => {
       
       if (metadata.description) formData.append('description', metadata.description);
       if (metadata.tags) formData.append('tags', JSON.stringify(metadata.tags));
-      if (metadata.isPublic !== undefined) formData.append('isPublic', metadata.isPublic);
+      if (metadata.isPublic !== undefined) formData.append('isPublic', metadata.isPublic.toString());
 
       const response = await apiRequest('/files/upload', {
         method: 'POST',
@@ -204,14 +261,14 @@ export const useFiles = () => {
     }
   };
 
-  const getMyFiles = async (options = {}) => {
+  const getMyFiles = async (options: GetFilesOptions = {}) => {
     try {
       setError(null);
       setIsLoading(true);
 
       const queryParams = new URLSearchParams();
-      if (options.page) queryParams.append('page', options.page);
-      if (options.limit) queryParams.append('limit', options.limit);
+      if (options.page) queryParams.append('page', options.page.toString());
+      if (options.limit) queryParams.append('limit', options.limit.toString());
       if (options.search) queryParams.append('search', options.search);
       if (options.tags) queryParams.append('tags', options.tags);
       if (options.sortBy) queryParams.append('sortBy', options.sortBy);
