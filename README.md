@@ -5,6 +5,7 @@ A complete decentralized file storage platform with React frontend, Node.js/Expr
 ## 🚀 Features
 
 ### Backend Features
+
 - **Authentication**: Email/password registration and login with JWT
 - **File Management**: Upload, download, share, and organize files
 - **IPFS Storage**: Files stored on Pinata IPFS with metadata in MongoDB
@@ -14,6 +15,7 @@ A complete decentralized file storage platform with React frontend, Node.js/Expr
 - **API Documentation**: RESTful API with comprehensive endpoints
 
 ### Frontend Features
+
 - **Modern UI**: Clean, accessible interface with Tailwind CSS and shadcn/ui
 - **Authentication**: Secure login/registration with form validation
 - **File Upload**: Drag-and-drop file upload with progress tracking
@@ -74,12 +76,14 @@ FRONTEND_URL=http://localhost:5173
 ### 3. Get Required API Keys
 
 #### Pinata IPFS
+
 1. Go to [Pinata](https://pinata.cloud)
 2. Create an account
 3. Generate API keys and JWT token
 4. Update Pinata config in backend `.env` file
 
 #### Perplexity AI (Optional)
+
 1. Go to [Perplexity AI](https://www.perplexity.ai/settings/api)
 2. Create an account and generate API key
 3. Update `PERPLEXITY_API_KEY` in backend `.env` file
@@ -87,45 +91,54 @@ FRONTEND_URL=http://localhost:5173
 ## 🚀 Running the Application
 
 ### Start Backend Server
+
 ```bash
 cd backend
 npm run dev
 ```
+
 Backend will run on `http://localhost:5000`
 
 ### Start Frontend Development Server
+
 ```bash
 # In the root directory
 npm run dev
 ```
+
 Frontend will run on `http://localhost:5173` (or next available port)
 
 ## 📖 Usage Guide
 
 ### 1. User Registration/Login
+
 - Visit the frontend URL
 - Register a new account or login with existing credentials
 - All authentication is handled by the backend with JWT tokens
 
 ### 2. File Upload
+
 - Click "Upload Files" or drag files to the upload area
 - Files are automatically uploaded to Pinata IPFS
 - File metadata is stored in MongoDB
 - Upload progress is shown in real-time
 
 ### 3. File Management
+
 - View all your files in the "My Files" tab
 - Search files by name, description, or tags
 - Download, share, or delete files
 - View file analytics and statistics
 
 ### 4. File Sharing
+
 - Click the share button on any file
 - Enter recipient's email address
 - Set permissions (view, download) and expiration
 - Recipients get notifications and can accept/decline shares
 
 ### 5. AI Features (Optional)
+
 - Analyze files for content insights and security
 - Use natural language search to find files
 - Get AI-powered storage optimization recommendations
@@ -134,6 +147,7 @@ Frontend will run on `http://localhost:5173` (or next available port)
 ## 🔧 Technical Architecture
 
 ### Backend Stack
+
 - **Node.js & Express**: Server and API framework
 - **MongoDB & Mongoose**: Database and ODM
 - **JWT**: Authentication and authorization
@@ -142,6 +156,7 @@ Frontend will run on `http://localhost:5173` (or next available port)
 - **Perplexity AI**: File analysis and search
 
 ### Frontend Stack
+
 - **React 18**: UI framework with hooks
 - **TypeScript**: Type safety
 - **Tailwind CSS**: Utility-first styling
@@ -168,6 +183,7 @@ Frontend will run on `http://localhost:5173` (or next available port)
 ## 🎯 Current Status
 
 ✅ **Completed:**
+
 - Full backend with Express, MongoDB, and JWT authentication
 - File upload/download with Pinata IPFS integration
 - User management and file sharing system
@@ -183,6 +199,7 @@ This is a complete, production-ready decentralized file storage platform with mo
 ## Prerequisites
 
 Before installation, ensure you have:
+
 - Node.js (v16+)
 - npm or yarn
 - MetaMask browser extension
@@ -191,12 +208,14 @@ Before installation, ensure you have:
 ## Project Setup
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/amanmaurya7/decendata.git
 cd decendata
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 # or
@@ -204,11 +223,13 @@ yarn install
 ```
 
 3. Set Up Pinata Credentials:
+
    - Create a free Pinata account at https://app.pinata.cloud
    - Generate API keys with `pinFileToIPFS` and `unpin` permissions
    - During first app launch, you'll be prompted to enter these credentials
 
 4. Start the Development Server:
+
 ```bash
 npm run dev
 # or
@@ -239,6 +260,7 @@ MIT License - see LICENSE file for details
 ## Contact
 
 **Aman Maurya**
+
 - Website: https://www.amanengineer.me/
 - GitHub: https://github.com/amanmaurya7
 - LinkedIn: https://www.linkedin.com/in/amanmaurya-me/
