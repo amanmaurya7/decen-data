@@ -2,9 +2,54 @@
 
 A complete decentralized file storage platform with React frontend, Node.js/Express backend, MongoDB database, Pinata IPFS integration, and AI-powered features using Perplexity AI.
 
-## 🚀 Features
+## 🚀 Featur## 🚀 Live Demo
 
-### Backend Features
+**Backend API**: https://decen-data.onrender.com
+
+The backend is deployed on Render with all production configurations including:
+- MongoDB Atlas database
+- Pinata IPFS integration
+- JWT authentication
+- CORS configured for production
+
+## 📦 Deployment
+
+### Backend Deployment (Render)
+
+The backend is already deployed and live at `https://decen-data.onrender.com`. To deploy your own instance:
+
+1. Fork/clone this repository
+2. Create a Render account and connect your GitHub repository
+3. Create a new Web Service with these settings:
+   - **Root Directory**: `backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+4. Set up environment variables in Render dashboard:
+   - `MONGODB_URI` (your MongoDB Atlas connection string)
+   - `JWT_SECRET` (secure random string)
+   - `PINATA_API_KEY` and `PINATA_API_SECRET`
+   - `PERPLEXITY_API_KEY` (optional)
+   - `FRONTEND_URL` (your frontend deployment URL)
+
+### Frontend Deployment
+
+For the frontend, update the API configuration:
+
+1. Update `.env` file:
+   ```
+   VITE_API_BASE_URL=https://your-backend-url.onrender.com/api
+   VITE_BACKEND_URL=https://your-backend-url.onrender.com
+   ```
+
+2. Deploy to your preferred platform (Vercel, Netlify, etc.)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Submit a pull request Backend Features
 
 - **Authentication**: Email/password registration and login with JWT
 - **File Management**: Upload, download, share, and organize files
